@@ -18,3 +18,6 @@ SEIR model (susceptible-exposed-infected-recovered) with integration of geograph
 
 ### Basic Methods Modelling Contagious Diseases  
 23 page overview over SIR model and stochastic branching model. Most likely a solid/decent introduction.
+
+### Social Contagioun 
+SIS model with an automatic ('spontaneous') extension in a social network setting. Might be another lead to combine SIS/SIR with stochastic models.
