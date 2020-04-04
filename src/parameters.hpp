@@ -30,6 +30,8 @@ namespace ABM
 
         double symptomaticPercentage;
 
+        double dt;
+
         Parameters(/* data */)
         : alpha(0.8), a_dist(3.8), b_dist(2.32), phi_workplace(std::vector<double>()) {}
 
