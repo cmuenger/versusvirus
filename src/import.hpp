@@ -78,8 +78,7 @@ std::vector<Municipality> importMunicipalies()
         
         town.BfsId = std::stoi(vec[0]);
         town.Name  = vec[1];
-        town.Plz   = std::stoi(vec[2]);
-        town.Coordinates = make_pair(std::stoi(vec[3]),std::stoi(vec[4]));
+        town.Coordinates = make_pair(std::stod(vec[3]),std::stod(vec[4]));
 
         municipality.push_back(town);
     }
