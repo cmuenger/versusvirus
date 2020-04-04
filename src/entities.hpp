@@ -13,9 +13,6 @@ namespace ABM
     enum AgeCat { Minor, Adult, Old};
     enum HealthCat { Susceptible, Exposed, Infected, Recovered};
 
-    class Household;
-    class Workplace;
-
     struct Agent
     {
         index_t Household;
@@ -63,6 +60,6 @@ namespace ABM
         std::vector<index_t> GetAgentsOfWorkplace(index_t wpIdx) const;
 
         Household GetHouseholdOfAgent(index_t agentIdx) const;
-        Workplace GetWorkplaecOfAgent(index_t agentIdx) const;
+        Workplace GetWorkplaceOfAgent(index_t agentIdx) const;
     };
 }
