@@ -24,14 +24,14 @@ namespace ABM
             {
                 case HealthCat::Susceptible:
                     const double l = lambda(agentIdx, population, parameters);
-                    const double p = 1. - std::exp(-l);
+                    const double p = 1. - std::exp(-l*parameters.dt);
                     if(Rng::Device::Rng.Value() < p)
                     {
                         agent.Health = HealthCat::Exposed;
                     }
                     break;
                 case HealthCat::Exposed:
-                    if(Rng::Device::Rng.Value() < 1/parameters.latency_period)
+                    if(Rng::Device::Rng.Value() < 1/parameters.latency_period*parameters.dt)
                     {
                         agent.Health = HealthCat::Infected;
                         if(Rng::Device::Rng.Value() < parameters.symptomaticPercentage)
@@ -41,7 +41,7 @@ namespace ABM
                     }
                     break;
                 case HealthCat::Infected:
-                    if(Rng::Device::Rng.Value() < 1./parameters.infection_period)
+                    if(Rng::Device::Rng.Value() < 1./parameters.infection_period*parameters.dt)
                     {
                         agent.Health = HealthCat::Recovered;
                     }
