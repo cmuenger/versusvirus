@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <tuple>
+#include <random>
 #include <math.h>
 
 #pragma once
@@ -29,4 +30,24 @@ namespace ABM
 
     // computes f(d_ik) according to eq (3) in add. file
     double Dist(const std::pair<double,double> locA, const std::pair<double,double> locB, const double param_a, const double param_b);
+
+    namespace Rng
+    {
+        class InnerDevice
+        {
+            private:
+            std::random_device _dev;
+            std::mt19937 _rng;
+            std::uniform_real_distribution<> _dist;
+
+            public:
+
+            InnerDevice() : _rng(std::mt19937(_dev())) {}
+
+            double Value()
+            {
+                return _dist(_rng);
+            }
+        }; 
+    }
 }

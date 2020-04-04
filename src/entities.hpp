@@ -21,6 +21,7 @@ namespace ABM
         index_t Workplace;
         AgeCat Age;
         HealthCat Health;
+        bool HasSymptoms;
 
         double Get_c(const double symptomaticCases) const;
         double Get_I() const;
@@ -72,9 +73,8 @@ namespace ABM
     {
         private:
 
-        SparseMatrix DistanceWeights;
-
         public:
+        SparseMatrix DistanceWeights;
         std::vector<Agent> Agents;
         std::vector<Household> Households;
         std::vector<Workplace> Workplaces;

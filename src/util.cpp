@@ -5,6 +5,7 @@
 
 namespace ABM
 {
+    
 
     SparseMatrix::SparseMatrix(std::vector<std::tuple<size_t, size_t, double>>& tripel) 
         : Values(std::vector<double>()), ColumnIdx(std::vector<size_t>()), RowIdx(std::vector<size_t>())

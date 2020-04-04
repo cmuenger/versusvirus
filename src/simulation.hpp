@@ -1,4 +1,5 @@
 #include <iostream>
+#include <math.h>void PerformTimeStep(Population& population, Parameters& parameters);
 #include "entities.hpp"
 #include "parameters.hpp"
 
