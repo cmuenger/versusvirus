@@ -3,10 +3,16 @@
 Overview over SIR model: 
 https://en.wikipedia.org/wiki/Mathematical_modelling_of_infectious_disease
 
-Stochatic model in R: 
-https://ethz.ch/content/dam/ethz/special-interest/usys/ibz/theoreticalbiology/education/learningmaterials/701-1424-00L/stochSIR.pdf
+SIR model in R:
+https://tb.ethz.ch/education/learningmaterials/modelingcourse/level-1-modules/SIR.html
 
-Stochatic model in-depth explanation:
+Stochastic model in R: 
+https://tb.ethz.ch/education/learningmaterials/modelingcourse/level-2-modules/stochSIR.html
+
+Mathematical modelling of infectious diseases:
+https://academic.oup.com/bmb/article/92/1/33/333536
+
+Stochastic model in-depth explanation:
 https://www.youtube.com/watch?v=PsoL8-Q-Grk 
 
 Example of agent based:
