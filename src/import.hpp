@@ -1,5 +1,5 @@
 #ifndef IMPORT_HPP
-#defene IMPORT_HPP
+#define IMPORT_HPP
 
 #include <string>
 #include <iostream>
@@ -33,7 +33,7 @@ std::vector<std::vector<std::string> > import_csv(const std::string filename, bo
     //Ignore first line (header)
     if(!includeHeader)
     {
-        getline(file, line, ';')
+        getline(file, line, ';');
     }
 	// Iterate through each line and split the content using delimeter
 	while (getline(file, line, ';'))
@@ -71,7 +71,7 @@ std::vector<Municipality> importMunicipalies()
 	{
         if(vec.size <=5)
         {
-            std::err<<"Municipality data does not match!"<<std::endl;
+            std::err << "Municipality data does not match!" << std::endl;
             exit(-1);
         }
         Municipality town;
@@ -79,7 +79,7 @@ std::vector<Municipality> importMunicipalies()
         town.BfsId = std::stoi(vec[0]);
         town.Name  = vec[1];
         town.Plz   = std::stoi(vec[2]);
-        town.Coordinates = make_pair(std::stoi(vec[3]),std::stoi(vec[4]));
+        town.Coordinates = std::make_pair(std::stoi(vec[3]),std::stoi(vec[4]));
 
         municipality.push_back(town);
     }

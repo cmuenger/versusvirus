@@ -1,6 +1,7 @@
 #include <cinttypes>
 #include <vector>
 #include <string>
+#include <pair>
 
 #pragma once
 
@@ -36,7 +37,7 @@ namespace ABM
         index_t BfsId;
         std::string Name;
         std::pair<double> Coordinates;
-     
+        int Plz;
     };
 
     class Population
