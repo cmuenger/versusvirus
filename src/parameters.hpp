@@ -14,9 +14,21 @@ namespace ABM
         public:
 
         // have here the parameters as std::vectors of double/int
+        double alpha;
+        double beta_household;
+        double beta_workplace;
+        double beta_commuting;
+
+        std::vector<double> phi_workplace;
 
 
-        Parameters(/* data */) {}
+        double a_dist;
+        double b_dist;
+
+        double latency_period;
+
+        Parameters(/* data */)
+        : alpha(0.8), a_dist(3.8), b_dist(2.32), phi_workplace(std::vector<double>()) {}
 
     };
 }
