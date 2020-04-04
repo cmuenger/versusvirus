@@ -1,6 +1,7 @@
 #include <cinttypes>
 #include <vector>
 #include <string>
+#include <random>
 
 #include "util.hpp"
 
@@ -21,8 +22,10 @@ namespace ABM
         AgeCat Age;
         HealthCat Health;
 
-        double Get_c() const;
+        double Get_c(const double symptomaticCases) const;
         double Get_I() const;
+
+
     };
 
     struct Household
