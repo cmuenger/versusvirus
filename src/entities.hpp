@@ -34,9 +34,9 @@ namespace ABM
     struct Municipality
     {
         index_t BfsId;
-        double GCoordE;
-        double GCoordN;
         std::string Name;
+        std::pair<double> Coordinates;
+     
     };
 
     class Population
