@@ -1,6 +1,8 @@
 #include <iostream>
 
-#include "container.hpp"
+#include "initialization.hpp"
+#include "entities.hpp"
+#include "simulation.hpp"
 
 
 using namespace ABM;
@@ -18,7 +20,6 @@ int main(int argc, char** argv)
     //   - should be precomputed and only read in here
     //   - initialise parameters of model (ideally precomputed as well)
     //   - initialise meta parameters (time, etc) -> eg from command line
-    // -> store data in container for Dependency injection
 
 
     //---------------------------
@@ -29,6 +30,6 @@ int main(int argc, char** argv)
 
     //---------------------------
     // Step 3
-    //   - 
+    //   - profit
 
 };
