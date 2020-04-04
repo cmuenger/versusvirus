@@ -26,6 +26,9 @@ namespace ABM
         double b_dist;
 
         double latency_period;
+        double infection_period;
+
+        double symptomaticPercentage;
 
         Parameters(/* data */)
         : alpha(0.8), a_dist(3.8), b_dist(2.32), phi_workplace(std::vector<double>()) {}
