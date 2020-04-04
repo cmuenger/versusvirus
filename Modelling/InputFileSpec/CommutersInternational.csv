@@ -1,4 +1,4 @@
-Canton(Work),Country(Home),"#Commuters,";
+Canton(Work),Country(Home),#Commuters;
 Zürich,Deutschland,8541,8;
 Zürich,Frankreich,930,3;
 Zürich,Italien,192,1;
