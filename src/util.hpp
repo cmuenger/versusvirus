@@ -31,7 +31,7 @@ namespace ABM
 
     };
 
-        class multimodal_distribution
+    class multimodal_distribution
     {
         //std::random_device rd;
         std::mt19937 gen;
@@ -40,27 +40,34 @@ namespace ABM
         std::vector<int> p;
         double N;
 
-        void init(std::vector<int> modes, int seed = 17)
+        multimodal_distribution(std::vector<int> modes,int seed = 17)   
+            : gen(), dis(), N(0)
         {
-            //gen(seed);
-            for(auto i : modes) N += i;
-            N =0;
+            for(auto i : modes)
+            {
+                p.push_back(N);
+                N+=modes[i];
+            }
+            
+            for(auto i : p)
+            {
+                i/=N;
+            }
+        
+        
         }
 
         int sample()
         {
-        /* double random = dis(gen);
+            double random = dis(gen);
 
             int i=0;
-            double sum=modes[i];
-            while(random > sum/N)
+            while(random > p[i])
             {
                 i++;
-                sum+=modes[i];
-            }
-            return i;*/
 
-            return 0;
+            }
+            return i;
         }
     };
 
