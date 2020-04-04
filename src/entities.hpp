@@ -2,11 +2,11 @@
 #include <vector>
 #include <string>
 
+#include "util.hpp"
 
 #pragma once
 
-typedef uint32_t index_t;
-typedef uint16_t category_t;
+typedef size_t index_t;
 
 namespace ABM
 {
@@ -20,6 +20,9 @@ namespace ABM
         index_t Workplace;
         AgeCat Age;
         HealthCat Health;
+
+        double Get_c() const;
+        double Get_I() const;
     };
 
     struct Household
@@ -66,10 +69,14 @@ namespace ABM
     {
         private:
 
+        SparseMatrix DistanceWeights;
+
         public:
         std::vector<Agent> Agents;
         std::vector<Household> Households;
         std::vector<Workplace> Workplaces;
+
+
 
         // Initilize class and fill Agents, Households and Workplaces see Figure 2 in "Additional file"
         Population(/* data */)
@@ -78,6 +85,7 @@ namespace ABM
         void assignAgentsToHouseholds( /* data */);
 
         void assignAgentsToWorkplaces( /* data */);
+
 
         std::vector<index_t> GetAgentsOfHousehold(index_t hhIdx) const;
         std::vector<index_t> GetAgentsOfWorkplace(index_t wpIdx) const;

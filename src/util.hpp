@@ -20,6 +20,8 @@ namespace ABM
         // the tuple-vector is not required to be sorted.
         SparseMatrix(std::vector<std::tuple<size_t, size_t, double>>& tripel); 
 
+        SparseMatrix() : Values(std::vector<double>()), ColumnIdx(std::vector<size_t>()), RowIdx(std::vector<size_t>()) {}
+
         // returns the value or 0
         double At(size_t row, size_t col) const;
 
