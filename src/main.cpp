@@ -4,6 +4,7 @@
 #include "entities.hpp"
 #include "simulation.hpp"
 #include "postprocess.hpp"
+#include "import.hpp"
 
 
 using namespace ABM;

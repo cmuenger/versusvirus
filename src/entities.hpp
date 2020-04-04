@@ -38,9 +38,31 @@ namespace ABM
     {
         index_t BfsId;
         std::string Name;
-        std::pair<double> Coordinates;
+        std::pair<double,double> Coordinates;
+        index_t Plz;
      
     };
+
+    struct HelpPopulation
+    {
+        index_t BfsId;
+        index_t NPeople;
+        double  pYoung;
+        double  pMiddle;
+        double  pOld;
+        index_t NHouseholds;
+        index_t NWorker;
+        index_t NWorkplaces;
+    };
+
+    struct Commuter
+    {
+        index_t BfsId;
+        index_t WorkId;
+        index_t CantonId;
+        index_t NCommuters;
+    };
+
 
     class Population
     {
