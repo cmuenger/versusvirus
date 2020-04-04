@@ -1,5 +1,6 @@
 #include <cinttypes>
 #include <vector>
+#include <string>
 
 #pragma once
 
@@ -9,18 +10,18 @@ typedef uint16_t category_t;
 namespace ABM
 {
 
-    enum Age { Minor, Adult, Old};
-    enum Health { Susceptible, Exposed, Infected, Recovered};
+    enum AgeCat { Minor, Adult, Old};
+    enum HealthCat { Susceptible, Exposed, Infected, Recovered};
 
     class Household;
     class Workplace;
 
-    class Agent
+    struct Agent
     {
         index_t Household;
         index_t Workplace;
-        Age Age;
-        Health Health;
+        AgeCat Age;
+        HealthCat Health;
     };
 
     struct Household
@@ -36,16 +37,10 @@ namespace ABM
     struct Municipality
     {
         index_t BfsId;
-        index_t Plz;
         std::string Name;
-        std::pair<index_t,index_t> Coordinates;
-    }
-
-    std::vector<Agent> generateAgents(const std::vector<double>& data);
-
-    std::vector<Household> generateHouseholds(const std::vector<double>& data);
-
-    std::vector<Workplace> generateWorkplaces(const std::vector<double>& data);
+        std::pair<double> Coordinates;
+     
+    };
 
     class Population
     {
@@ -56,12 +51,13 @@ namespace ABM
         std::vector<Household> Households;
         std::vector<Workplace> Workplaces;
 
-        Population(std::vector<Agent> agents, std::vector<Household> households, std::vector<Workplace> workplaces)
-        : Agents(agents), Households(households), Workplaces(workplaces) {}
+        // Initilize class and fill Agents, Households and Workplaces see Figure 2 in "Additional file"
+        Population(/* data */)
+        {}
 
         void assignAgentsToHouseholds( /* data */);
 
-        void assignAgentstoWorkplaces( /* data */);
+        void assignAgentsToWorkplaces( /* data */);
 
         std::vector<index_t> GetAgentsOfHousehold(index_t hhIdx) const;
         std::vector<index_t> GetAgentsOfWorkplace(index_t wpIdx) const;

@@ -1,8 +1,8 @@
-#pragma once
-
 #include <iostream>
 #include "entities.hpp"
-#include "initialization.hpp"
+#include "parameters.hpp"
+
+#pragma once
 
 namespace ABM
 {

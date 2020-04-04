@@ -1,8 +1,9 @@
 #include <iostream>
 
-#include "initialization.hpp"
+#include "parameters.hpp"
 #include "entities.hpp"
 #include "simulation.hpp"
+#include "postprocess.hpp"
 
 
 using namespace ABM;
