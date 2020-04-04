@@ -7,7 +7,6 @@
 #include "import.hpp"
 #include "util.hpp"
 
-
 using namespace ABM;
 
 int main(int argc, char** argv)
@@ -44,16 +43,7 @@ int main(int argc, char** argv)
 
     std::cout<<households[3].NHouseholds<<std::endl;
 
-
-
-    // ABM::computeCommute(commuters,pop,id,map);
-
-    
-
-    
-    // Step 1: initialisation
-    // Step 2: computation
-    // Step 3: prep output for webservice
+    // END TEST
 
     //---------------------------
     // Step 1
@@ -71,6 +61,19 @@ int main(int argc, char** argv)
 
     //---------------------------
     // Step 3
-    //   - profit
+    //   - prep output for web-app
+    //   - profit    
+
+    CommandLineInterface cli(argc, argv);
+    cli.ParseArgs();
+
+    Population population; // init here <--------------------------
+    Parameters parameters; // init here <--------------------------
+
+    for(int t = 0; t < cli.getTimeHorizon(); t += cli.getTimeDelta())
+    {
+        PerformTimeStep(population, parameters);
+        // export population for output? <-------------------------
+    }
 
 };

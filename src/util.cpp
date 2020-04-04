@@ -59,17 +59,30 @@ namespace ABM
 
     CommandLineInterface::CommandLineInterface(const int argc, const char** argv)
     : _argc(argc), _argv(argv), _helplines(std::vector<std::string>())
-    {}
+    {
+        AddHelpline("-h x", "Print this help");
+        AddHelpline("-t x", "Put the time horizon in days (multiple of dt), default = 21");
+        AddHelpline("-d x", "time delta in days, default = 1");
+        _dt = 1;
+        _timeHorizon = 21;
+    }
 
-    virtual void CommandLineInterface::HandleArg(const char opt, const std::string optArg)
+    void CommandLineInterface::HandleArg(const char opt, const std::string optArg)
     {
         switch(opt)
         {
             case 't':
                 _timeHorizon = std::stoi(optArg);
                 break;
+            case 'd':
+                _dt = std::stoi(optArg);
+            case 'h':
+                PrintHelp();
+                std::exit(0);
+                break;
             default:
-                std::cerr << "Unknown option." << std::endl;
+                PrintHelp();
+                std::exit(-2);
         }
     }
 
@@ -91,14 +104,27 @@ namespace ABM
         }
     }
 
-    void CommandLineInterface::AddHelpline(std::string option, bool hasValue, std::string descr) 
+    void CommandLineInterface::AddHelpline(std::string option, std::string descr) 
     {
         _helplines.push_back("'" + option + "': "+descr);
+    }
+
+    void CommandLineInterface::PrintHelp() const
+    {
+        for(auto line : _helplines)
+        {
+            std::cout << line << std::endl;
+        }
     }
 
     int CommandLineInterface::getTimeHorizon() const
     {
         return _timeHorizon;
+    }
+
+    int CommandLineInterface::getTimeDelta() const
+    {
+        return _dt;
     }
 
 

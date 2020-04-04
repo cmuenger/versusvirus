@@ -104,20 +104,20 @@ namespace ABM
         std::vector<std::string> _helplines;
 
         int _timeHorizon;
+        int _dt;
 
         virtual void HandleArg(const char opt, const std::string optArg);
 
-        void AddHelpline(std::string option, bool hasValue, std::string descr);
+        void AddHelpline(std::string option, std::string descr);
 
         public:
 
         CommandLineInterface(const int argc, const char** argv);
 
-        void PrintHelp();
+        void PrintHelp() const;
         virtual void ParseArgs();
 
         int getTimeHorizon() const;
+        int getTimeDelta() const;
     };
 }
-
-#endif
