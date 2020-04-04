@@ -33,6 +33,14 @@ namespace ABM
         index_t Municipality;
     };
 
+    struct Municipality
+    {
+        index_t BfsId;
+        index_t Plz;
+        std::string Name;
+        std::pair<index_t,index_t> Coordinates;
+    }
+
     std::vector<Agent> generateAgents(const std::vector<double>& data);
 
     std::vector<Household> generateHouseholds(const std::vector<double>& data);
