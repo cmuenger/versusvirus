@@ -1,5 +1,6 @@
 #include <cinttypes>
 #include <vector>
+#include <string>
 
 #pragma once
 
@@ -9,8 +10,8 @@ typedef uint16_t category_t;
 namespace ABM
 {
 
-    enum Age { Minor, Adult, Old};
-    enum Health { Susceptible, Exposed, Infected, Recovered};
+    enum AgeCat { Minor, Adult, Old};
+    enum HealthCat { Susceptible, Exposed, Infected, Recovered};
 
     class Household;
     class Workplace;
@@ -19,8 +20,8 @@ namespace ABM
     {
         index_t Household;
         index_t Workplace;
-        Age Age;
-        Health Health;
+        AgeCat Age;
+        HealthCat Health;
     };
 
     struct Household
@@ -33,11 +34,13 @@ namespace ABM
         index_t Municipality;
     };
 
-    std::vector<Agent> generateAgents(const std::vector<double>& data);
-
-    std::vector<Household> generateHouseholds(const std::vector<double>& data);
-
-    std::vector<Workplace> generateWorkplaces(const std::vector<double>& data);
+    struct Municipality
+    {
+        index_t BfsId;
+        double GCoordE;
+        double GCoordN;
+        std::string Name;
+    };
 
     class Population
     {
@@ -48,7 +51,7 @@ namespace ABM
         std::vector<Household> Households;
         std::vector<Workplace> Workplaces;
 
-        // Initilize class and fill Agents, Households and Workplaces.
+        // Initilize class and fill Agents, Households and Workplaces see Figure 2 in "Additional file"
         Population(/* data */)
         {}
 
