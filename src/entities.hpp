@@ -48,6 +48,18 @@ namespace ABM
      
     };
 
+    struct HelpHousehold
+    {
+        index_t BfsId;
+        index_t NHouseholds;
+        index_t P1;
+        index_t P2;
+        index_t P3;
+        index_t P4;
+        index_t P5;
+        index_t P6;
+    };
+
     struct HelpPopulation
     {
         index_t BfsId;
