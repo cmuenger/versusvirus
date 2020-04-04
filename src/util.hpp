@@ -50,4 +50,29 @@ namespace ABM
             }
         }; 
     }
+
+    class CommandLineInterface
+    {
+        protected:
+        const int _argc;
+        const char** _argv;
+        std::vector<char> _options;
+        std::vector<std::string> _optArgs;
+        std::vector<std::string> _helplines;
+
+        int _timeHorizon;
+
+        virtual void HandleArg(const char opt, const std::string optArg);
+
+        void AddHelpline(std::string option, bool hasValue, std::string descr);
+
+        public:
+
+        CommandLineInterface(const int argc, const char** argv);
+
+        void PrintHelp();
+        virtual void ParseArgs();
+
+        int getTimeHorizon() const;
+    }
 }

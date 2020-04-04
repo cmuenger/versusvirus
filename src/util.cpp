@@ -56,4 +56,52 @@ namespace ABM
         double dist = std::sqrt( std::pow( locA.first - locB.first, 2) + std::pow(locA.second - locB.second, 2) );
         return 1./(1. + std::pow( dist/param_a, param_b) );
     }
+
+    CommandLineInterface::CommandLineInterface(const int argc, const char** argv)
+    : _argc(argc), _argv(argv), _helplines(std::vector<std::string>())
+    {}
+
+    virtual void CommandLineInterface::HandleArg(const char opt, const std::string optArg)
+    {
+        switch(opt)
+        {
+            case 't':
+                _timeHorizon = std::stoi(optArg);
+                break;
+            default:
+                std::cerr << "Unknown option." << std::endl;
+        }
+    }
+
+    void CommandLineInterface::ParseArgs()
+    {
+        for(int i = 0; i < _argc; i++)
+        {
+            if(_argv[i][0] == '-')
+            {
+                _options.push_back(_argv[i][1]);
+                i++;
+                _optArgs.push_back( _argv[i]);
+            }
+        }
+
+        for(int i = 0; i < _options.size(); i++)
+        {
+            HandleArg(_options[i], _optArgs[i]);
+        }
+    }
+
+    void CommandLineInterface::AddHelpline(std::string option, bool hasValue, std::string descr) 
+    {
+        _helplines.push_back("'" + option + "': "+descr);
+    }
+
+    int CommandLineInterface::getTimeHorizon() const
+    {
+        return _timeHorizon;
+    }
+
+
+
+
 }
