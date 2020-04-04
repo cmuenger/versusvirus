@@ -15,7 +15,7 @@ namespace ABM
     class Household;
     class Workplace;
 
-    class Agent
+    struct Agent
     {
         index_t Household;
         index_t Workplace;
@@ -48,12 +48,13 @@ namespace ABM
         std::vector<Household> Households;
         std::vector<Workplace> Workplaces;
 
-        Population(std::vector<Agent> agents, std::vector<Household> households, std::vector<Workplace> workplaces)
-        : Agents(agents), Households(households), Workplaces(workplaces) {}
+        // Initilize class and fill Agents, Households and Workplaces.
+        Population(/* data */)
+        {}
 
         void assignAgentsToHouseholds( /* data */);
 
-        void assignAgentstoWorkplaces( /* data */);
+        void assignAgentsToWorkplaces( /* data */);
 
         std::vector<index_t> GetAgentsOfHousehold(index_t hhIdx) const;
         std::vector<index_t> GetAgentsOfWorkplace(index_t wpIdx) const;
