@@ -1,6 +1,6 @@
 all: simulation
 
-COMPFLAGS = -std=c++17 -O3
+COMPFLAGS = --std=c++17 -O3
 COMP = g++
 LIBS = `libpng-config --ldflags` -lstdc++fs
 
@@ -20,10 +20,10 @@ postprocess.o: postprocess.hpp postprocess.cpp
 	${COMP} ${COMPFLAGS}  postprocess.cpp -c
 
 postprocess.o: postprocess.hpp postprocess.cpp
-	g++ --std=c++17 -O3 postprocess.cpp -c `libpng-config --ldflags` -lstdc++fs
+	${COMP} ${COMPFLAGS} postprocess.cpp -c 
 
 main.o: main.cpp
-	g++ ${COMPFLAGS} main.cpp -c
+	${COMP} ${COMPFLAGS} main.cpp -c
 
 clean:
 	rm -f *.o
