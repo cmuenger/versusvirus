@@ -7,7 +7,7 @@ namespace ABM
 {
     
 
-    SparseMatrix::SparseMatrix(std::vector<std::tuple<size_t, size_t, double>>& tripel) 
+    SparseMatrix::SparseMatrix(std::vector<std::tuple<size_t, size_t, double>>& tripel, const size_t nrRows) 
         : Values(std::vector<double>()), ColumnIdx(std::vector<size_t>()), RowIdx(std::vector<size_t>())
         {
             std::sort(tripel.begin(), tripel.end(), [](std::tuple<size_t, size_t, double> a, std::tuple<size_t, size_t, double> b) { 
@@ -22,20 +22,20 @@ namespace ABM
             });
 
             Values.reserve(tripel.size());
-            RowIdx.push_back(0);
+            RowIdx.resize(nrRows+1);
+            RowIdx[0] = 0;
             size_t currentRow = 0;
             for(auto tpl : tripel)
             {
                 while(std::get<0>(tpl) > currentRow)
                 {
-                    RowIdx.push_back( Values.size());
-                    currentRow++;
+                    RowIdx[++currentRow] = Values.size();
                 }
 
                 Values.push_back( std::get<2>(tpl));
                 ColumnIdx.push_back( std::get<1>(tpl));
             }
-            RowIdx.push_back( Values.size());
+            RowIdx[nrRows] = Values.size();
         }
 
     double SparseMatrix::At(const size_t row, const size_t col) const
@@ -63,8 +63,10 @@ namespace ABM
         AddHelpline("-h x", "Print this help");
         AddHelpline("-t x", "Put the time horizon in days (multiple of dt), default = 21");
         AddHelpline("-d x", "time delta in days, default = 1");
+        AddHelpline("-s x", "number of patients zero, default=1");
         _dt = 1;
         _timeHorizon = 21;
+        _sick = 1;
     }
 
     void CommandLineInterface::HandleArg(const char opt, const std::string optArg)
@@ -76,6 +78,10 @@ namespace ABM
                 break;
             case 'd':
                 _dt = std::stoi(optArg);
+                break;
+            case 's':
+                _sick = std::stoi(optArg);
+                break;
             case 'h':
                 PrintHelp();
                 std::exit(0);
@@ -125,6 +131,11 @@ namespace ABM
     int CommandLineInterface::getTimeDelta() const
     {
         return _dt;
+    }
+
+    int CommandLineInterface::getPatientZeros() const
+    {
+        return _sick;
     }
 
 

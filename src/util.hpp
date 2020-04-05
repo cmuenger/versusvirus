@@ -20,9 +20,9 @@ namespace ABM
 
         // the tuple is (row idx, col idx, value)
         // the tuple-vector is not required to be sorted.
-        SparseMatrix(std::vector<std::tuple<size_t, size_t, double>>& tripel); 
+        SparseMatrix(std::vector<std::tuple<size_t, size_t, double>>& tripel, const size_t nrRows); 
 
-        SparseMatrix() : Values(std::vector<double>()), ColumnIdx(std::vector<size_t>()), RowIdx(std::vector<size_t>()) {}
+        SparseMatrix() : Values(std::vector<double>(0)), ColumnIdx(std::vector<size_t>(0)), RowIdx(std::vector<size_t>(0)) {}
 
         // returns the value or 0
         double At(size_t row, size_t col) const;
@@ -129,6 +129,7 @@ namespace ABM
 
         int _timeHorizon;
         int _dt;
+        int _sick;
 
         virtual void HandleArg(const char opt, const std::string optArg);
 
@@ -143,6 +144,7 @@ namespace ABM
 
         int getTimeHorizon() const;
         int getTimeDelta() const;
+        int getPatientZeros() const;
     };
 
     class SimpleMap
