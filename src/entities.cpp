@@ -38,29 +38,30 @@ namespace ABM
         std::map<index_t, index_t>& map, const Parameters& parameters)
     {
         std::vector<std::tuple<size_t, size_t, double>> triples = std::vector<std::tuple<size_t, size_t, double>>();
-        for(size_t aIdx = 0; aIdx < Agents.size(); aIdx++)
-        {
-            const Municipality& ahh = municipalities[map[Households[Agents[aIdx].Household].Municipality]];
-            const Municipality& awp = municipalities[map[Workplaces[Agents[aIdx].Workplace].Municipality]];
+        // for(size_t aIdx = 0; aIdx < Agents.size(); aIdx++)
+        // {
+        //     std::cout << "At agent " << aIdx << "/" << Agents.size() << std::endl;
+        //     const Municipality& ahh = municipalities[map[Households[Agents[aIdx].Household].Municipality]];
+        //     const Municipality& awp = municipalities[map[Workplaces[Agents[aIdx].Workplace].Municipality]];
             
-            for(size_t bIdx = 0; bIdx < Agents.size(); bIdx++)
-            {     
-                const Municipality& bhh = municipalities[map[Households[Agents[bIdx].Household].Municipality]];
-                const Municipality& bwp = municipalities[map[Workplaces[Agents[bIdx].Workplace].Municipality]];
+        //     for(size_t bIdx = 0; bIdx < Agents.size(); bIdx++)
+        //     {     
+        //         const Municipality& bhh = municipalities[map[Households[Agents[bIdx].Household].Municipality]];
+        //         const Municipality& bwp = municipalities[map[Workplaces[Agents[bIdx].Workplace].Municipality]];
 
-                double dist1 = Dist(ahh.Coordinates, bhh.Coordinates, parameters.a_dist, parameters.b_dist);
-                double dist2 = Dist(ahh.Coordinates, bwp.Coordinates, parameters.a_dist, parameters.b_dist);
-                double dist3 = Dist(awp.Coordinates, bhh.Coordinates, parameters.a_dist, parameters.b_dist);
-                double dist4 = Dist(awp.Coordinates, bwp.Coordinates, parameters.a_dist, parameters.b_dist);
+        //         double dist1 = Dist(ahh.Coordinates, bhh.Coordinates, parameters.a_dist, parameters.b_dist);
+        //         double dist2 = Dist(ahh.Coordinates, bwp.Coordinates, parameters.a_dist, parameters.b_dist);
+        //         double dist3 = Dist(awp.Coordinates, bhh.Coordinates, parameters.a_dist, parameters.b_dist);
+        //         double dist4 = Dist(awp.Coordinates, bwp.Coordinates, parameters.a_dist, parameters.b_dist);
                 
-                double dist = std::min({dist1, dist2, dist3, dist4});
-                if (dist <= parameters.cutoff)
-                {
-                    triples.push_back( std::make_tuple(aIdx, bIdx, dist));
-                }
+        //         double dist = std::min({dist1, dist2, dist3, dist4});
+        //         if (dist <= parameters.cutoff)
+        //         {
+        //             triples.push_back( std::make_tuple(aIdx, bIdx, dist));
+        //         }
 
-            }
-        }
+        //     }
+        // }
 
         DistanceWeights = SparseMatrix(triples);
     }
