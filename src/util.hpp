@@ -142,4 +142,35 @@ namespace ABM
         int getTimeHorizon() const;
         int getTimeDelta() const;
     };
+
+    class SimpleMap
+    {
+        private:
+        std::vector<index_t> _up;
+        std::map<index_t, index_t> _down;
+
+        public:
+
+        SimpleMap() : _up(std::vector<index_t>()), _down(std::map<index_t, index_t>())
+        {}
+
+        index_t GetNewId(index_t originalId)
+        {
+            try 
+            {
+                return _down.at(originalId);
+            } catch (...)
+            {
+                _up.push_back(originalId);
+                _down.insert({originalId, _up.size()-1});
+                return _up.size()-1;
+            }
+        }
+
+        index_t getOrigId(index_t newId) const 
+        {
+            if (_up.size() < newId) return -1;
+            return _up[newId];
+        }
+    };
 }
