@@ -52,6 +52,7 @@ namespace ABM
     {
         index_t Id;
         index_t BfsId;
+        index_t KId;
         std::string Name;
         std::pair<double,double> Coordinates;
         index_t Plz;
@@ -82,6 +83,7 @@ namespace ABM
     struct HelpPopulation
     {
         index_t BfsId;
+        index_t KId;
         index_t NPeople;
         double  pYoung;
         double  pMiddle;
@@ -89,6 +91,14 @@ namespace ABM
         index_t NHouseholds;
         index_t NWorker;
         index_t NWorkplaces;
+    };
+
+    struct HelpCoordinates
+    {
+        index_t BfsId;
+        std::string Name;
+        std::pair<double,double> Coordinates;
+
     };
 
     struct Commuter
@@ -132,7 +142,7 @@ namespace ABM
 
         void createHouseholds(std::vector<HelpPopulation> pop, std::vector<HelpHousehold> house);        
         void createWorkplaces();
-        void createMunicipalities(std::vector<HelpPopulation> pop, std::vector<Commuter> com, std::map<index_t, index_t> map);
+        void createMunicipalities(std::vector<HelpPopulation> pop, std::vector<Commuter> com, std::vector<HelpCoordinates>, std::map<index_t, index_t> map);
 
         void createLookUpTableForAgents(std::map<index_t,index_t> map);
         void createLookUpTableForWorkplaces();
