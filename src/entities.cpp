@@ -435,7 +435,7 @@ namespace ABM
           
             if(m.commutes.size() == 0) continue;
 
-            std::cout<<m.Id<<" "<<m.Ncommutes<<std::endl;
+            // std::cout<<m.Id<<" "<<m.Ncommutes<<std::endl;
             multimodal_distribution multimodal(m.commutes);
             std::vector<index_t> workforce = GetWorkforceOfMunicipality(m.Id);
 

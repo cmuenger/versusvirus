@@ -116,7 +116,7 @@ int main(int argc, char** argv)
     std::cout<<n<<" "<<work_class[0]<<" "<<work_class[1]<<" "<<work_class[2]<<" "<<work_class[3]<<std::endl;
     
     
-    /*Parameters parameters;
+    Parameters parameters;
 
     std::cout << "starting distance initialisation..." << std::endl;
     p.setupDistanceWeights(p.Municipalities, bfsIdToIdx_map, parameters);
@@ -167,6 +167,6 @@ int main(int argc, char** argv)
         PerformTimeStep(p, parameters, bf);
         // export population for output? <-------------------------
         vizualize(p, t);
-    }*/
+    }
 
 };
