@@ -96,6 +96,8 @@ namespace ABM
             {
                 m.Coordinates = it->Coordinates;
                 m.Name = it->Name;
+
+                std::cout<<it->Coordinates.first<<" "<<it->Coordinates.second<<std::endl;
             }
             
            
@@ -142,6 +144,8 @@ namespace ABM
                 std::cerr<<"House data "<<m.BfsId<<"not found"<<std::endl;
                 continue;
             }
+
+
 
             m.NHouseholds = it->NHouseholds;
 
@@ -429,6 +433,7 @@ namespace ABM
     {
         uniform_distribution uniform;
         int countCommute=0;
+        int countWorker=0;
         //Loop over Municpaltiy. 
         for(const auto& m : Municipalities)
         {   
@@ -457,13 +462,14 @@ namespace ABM
                 }
                 it = workforce_set.find(w_idx);
       
-            
                 c++;
+                countWorker++;
+              
+                int sample = multimodal.sample();
+             
+                //Pick a commute. Multimodal distribution of commutes by sze
+                index_t c_idx = m.commutes_map[multimodal.sample()];       
             
-        
-                //Pick a commute. Multimodal distribution of commutes by size
-                index_t c_idx = m.commutes_map[multimodal.sample()];        
-                    
                 //TODO sample cantons at random for unspecifed commutes
                 //std::cout<<c_idx<<std::endl;
                 //Get workplaces of Commute city
@@ -495,7 +501,7 @@ namespace ABM
             }
         }
 
-        std::cout<<"Assigned "<<countCommute<<" Workers"<<std::endl;
+        std::cout<<"Assigned "<<countCommute<<"/"<<countWorker<<" Workers"<<std::endl;
         
     }
 

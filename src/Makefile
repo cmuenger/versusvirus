@@ -1,6 +1,6 @@
 all: simulation
 
-COMPFLAGS = --std=c++17 -O3
+COMPFLAGS = --std=c++17 -O3 
 COMP = g++
 LIBS = -lstdc++fs `libpng-config --ldflags`
 

@@ -35,24 +35,25 @@ namespace ABM
         std::mt19937 gen;
         std::uniform_real_distribution<> dis;
 
-        std::vector<int> p;
+        std::vector<double> p;
         double N;
         public:
         multimodal_distribution(std::vector<index_t> modes,int seed = 17)   
-            : gen(), dis(), N(0)
+            : gen(), dis(0.0, 1.0), N(0)
         {
             for(auto i : modes)
             {
+               
                 N+=i;
                 p.push_back(N);
-                
             }
             
-            for(auto i : p)
+            for(auto&& i : p)
             {
                 i/=N;
             }
-        
+
+          
         }
 
         int sample()
@@ -63,8 +64,9 @@ namespace ABM
             while(random > p[i])
             {
                 i++;
-
+            
             }
+           
             return i;
         }
     };
