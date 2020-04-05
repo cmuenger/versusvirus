@@ -7,6 +7,8 @@
 
 #pragma once
 
+typedef size_t index_t;
+
 namespace ABM
 {
     struct SparseMatrix
@@ -34,8 +36,8 @@ namespace ABM
 
         std::vector<int> p;
         double N;
-
-        multimodal_distribution(std::vector<int> modes,int seed = 17)   
+        public:
+        multimodal_distribution(std::vector<index_t> modes,int seed = 17)   
             : gen(), dis(), N(0)
         {
             for(auto i : modes)
@@ -48,7 +50,6 @@ namespace ABM
             {
                 i/=N;
             }
-        
         
         }
 
@@ -65,6 +66,33 @@ namespace ABM
             return i;
         }
     };
+
+    class uniform_distribution
+    {
+        //std::random_device rd;
+        std::mt19937 gen;
+        std::uniform_real_distribution<> dis;
+
+        std::vector<int> p;
+        double N;
+        public:
+        uniform_distribution()   
+            : gen(), dis(), N(0)
+        {        }
+
+        int sample_int( const int a, const int b)
+        {
+            double random = dis(gen);
+
+            return (int)random*(b-a)+a;
+        }
+
+        double sample()
+        {
+            return dis(gen);
+        }
+    };
+
 
     // computes f(d_ik) according to eq (3) in add. file
     double Dist(const std::pair<double,double> locA, const std::pair<double,double> locB, const double param_a, const double param_b);

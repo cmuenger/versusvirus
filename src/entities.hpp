@@ -14,6 +14,7 @@ namespace ABM
 
     enum AgeCat { Minor, Adult, Old};
     enum HealthCat { Susceptible, Exposed, Infected, Recovered};
+    enum WorkCat : int { Global , Large, Medium, Small};
 
     struct Agent
     {
@@ -37,6 +38,10 @@ namespace ABM
     struct Workplace
     {
         index_t Municipality;
+        index_t NWorker;
+        index_t MinWorker;
+        WorkCat Size;
+        
     };
 
     struct Municipality
@@ -45,6 +50,14 @@ namespace ABM
         std::string Name;
         std::pair<double,double> Coordinates;
         index_t Plz;
+        index_t NHouseholds;
+        index_t NWorker;
+        index_t NWorkplaces;
+        index_t MaxWorker;
+        index_t MaxWorkplaces;
+        index_t Ncommutes;
+        std::vector<index_t> commutes;
+        std::vector<index_t> commutes_map;
      
     };
 
@@ -92,6 +105,7 @@ namespace ABM
         std::vector<Agent> Agents;
         std::vector<Household> Households;
         std::vector<Workplace> Workplaces;
+        std::vector<Municipality> Municipalities;
 
 
 
@@ -103,11 +117,17 @@ namespace ABM
 
         void assignAgentsToWorkplaces( /* data */);
 
+        void createWorkplaces();
+
 
         std::vector<index_t> GetAgentsOfHousehold(index_t hhIdx) const;
         std::vector<index_t> GetAgentsOfWorkplace(index_t wpIdx) const;
 
         Household GetHouseholdOfAgent(index_t agentIdx) const;
         Workplace GetWorkplaceOfAgent(index_t agentIdx) const;
+
+        index_t GetRandomAdultOfHousehold(index_t hIdx) const;
+
+        std::vector<index_t> GetWorkplacesOfMunicipality(index_t cIdx) const;
     };
 }
