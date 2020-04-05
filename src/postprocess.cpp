@@ -22,7 +22,7 @@ namespace ABM
 		int i_map_y = 0;
 		int x_step = MAP_WIDTH/PIC_WIDTH;
 		int y_step = MAP_HEIGHT/PIC_HEIGHT;
-		int[PIC_WIDTH][PIC_HEIGHT][4] heat_map = 0;
+		int heat_map[PIC_WIDTH][PIC_HEIGHT][4] = {};
 		for(int column = 0; column < PIC_WIDTH; column++){
 			for (int row = 0; row < PIC_HEIGHT; row++){
 				// copy data over into correct size
@@ -39,7 +39,7 @@ namespace ABM
 			}
 		}
 
-		png::image heat_map_png = image<rgba_pixel>(PIC_WIDTH,PIC_HEIGHT);
+		png::image heat_map_png = png::image<png::rgba_pixel>(PIC_WIDTH,PIC_HEIGHT);
 		heat_map_png.write(fname);
 
 		return;

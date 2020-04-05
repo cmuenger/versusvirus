@@ -13,14 +13,14 @@ simulation.o: simulation.hpp simulation.cpp
 	g++ --std=c++17 -O3 -g simulation.cpp -c
 
 postprocess.o: postprocess.hpp postprocess.cpp
-	g++ --std=c++17 -O3 -g postprocess.cpp -c -lstdc++fs
+	g++ --std=c++17 -O3 -g postprocess.cpp -c -lstdc++fs libpng-config
 
 main.o: main.cpp
 	g++ --std=c++17 -O3 -g  main.cpp -c
 
 
-simulation: util.o entities.o parameters.o simulation.o main.o
-	g++ --std=c++17 -O3 -g util.o entities.o parameters.o simulation.o postprocess.o main.o -o simulation -lstdc++fs
+simulation: util.o entities.o parameters.o simulation.o postprocess.o main.o
+	g++ --std=c++17 -O3 -g util.o entities.o parameters.o simulation.o postprocess.o main.o -o simulation -lstdc++fs `libpng-config  --ldflags`
 
 clean:
 	rm -f *.o
