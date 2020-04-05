@@ -20,10 +20,12 @@ int main(int argc, char** argv)
     std::vector<HelpPopulation> pop;
     std::vector<Commuter> commuters;
     std::vector<HelpHousehold> households;
+    std::vector<HelpCoordinates> coordinates;
     std::map<index_t,index_t> bfsIdToIdx_map;
     std::vector<index_t> id;
 
     std::tie(pop,id,bfsIdToIdx_map) = ABM::importHelpPopulation();
+    coordinates = ABM::importMunicipalies();
 
     commuters = ABM::importCommuter();
 
@@ -31,7 +33,7 @@ int main(int argc, char** argv)
 
     Population p;
 
-    p.createMunicipalities(pop,commuters,bfsIdToIdx_map);
+    p.createMunicipalities(pop,commuters,coordinates,bfsIdToIdx_map);
 
     std::cout<<p.Municipalities.size()<<std::endl;
     int sum =0;
@@ -85,10 +87,12 @@ int main(int argc, char** argv)
 
 
     std::vector<index_t> work_class(4,0);
+    int n=0;
     for(const auto& a : p.Agents)
     {
         if(a.Workplace != ~0)
         {
+            
             if(p.Workplaces[a.Workplace].Size == WorkCat::Small)
             {
                 work_class[0]++;
@@ -105,12 +109,14 @@ int main(int argc, char** argv)
             {
                 work_class[3]++;
             }
-
+            n++;
         }
     }
 
-    std::cout<<work_class[0]<<" "<<work_class[1]<<" "<<work_class[2]<<" "<<work_class[3]<<std::endl;
-    Parameters parameters;
+    std::cout<<n<<" "<<work_class[0]<<" "<<work_class[1]<<" "<<work_class[2]<<" "<<work_class[3]<<std::endl;
+    
+    
+    /*Parameters parameters;
 
     std::cout << "starting distance initialisation..." << std::endl;
     p.setupDistanceWeights(p.Municipalities, bfsIdToIdx_map, parameters);
@@ -161,6 +167,6 @@ int main(int argc, char** argv)
         PerformTimeStep(p, parameters, bf);
         // export population for output? <-------------------------
         vizualize(p, t);
-    }
+    }*/
 
 };

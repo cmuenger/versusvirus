@@ -68,13 +68,14 @@ namespace ABM
         DistanceWeights = SparseMatrix(triples, Agents.size());
     }
 
-    void Population::createMunicipalities(std::vector<HelpPopulation> pop, std::vector<Commuter> com, std::map<index_t, index_t> map)
+    void Population::createMunicipalities(std::vector<HelpPopulation> pop, std::vector<Commuter> com, std::vector<HelpCoordinates> coord, std::map<index_t, index_t> map)
     {
         for(const auto& p : pop)
         {
             Municipality m;
             m.Id = map[p.BfsId];
             m.BfsId = p.BfsId;
+            m.KId = p.KId;
             m.NPeople = p.NPeople;
             m.MaxWorker = p.NWorker;
             m.NWorker = 0;
@@ -84,7 +85,20 @@ namespace ABM
 
             m.commutes_map = std::vector<index_t>(0);
             m.commutes_map = std::vector<index_t>(0);
+
+            const auto& it = std::find_if(coord.begin(), coord.end(),[&](const auto& val){ return val.BfsId == m.BfsId; }  );
+            if(it == coord.end())
+            {
+                std::cerr<<"Coordinate missing ("<<m.BfsId<<")"<<std::endl;
+                m.Coordinates = std::make_pair(0,0);
+            }
+            else
+            {
+                m.Coordinates = it->Coordinates;
+                m.Name = it->Name;
+            }
             
+           
             
             int countCommutes=0;
             //Add commutes
@@ -96,7 +110,7 @@ namespace ABM
                     {
                         m.commutes_map.push_back(map[c.WorkId]);
                         m.commutes.push_back(c.NCommuters);
-                        countCommutes++;
+                        countCommutes+=c.NCommuters;
                     }
                 }
             }
@@ -161,6 +175,7 @@ namespace ABM
                 //Setup inhabitants
                 Agent a;
                 a.Household = countHousehold;
+                a.Workplace = ~0;
                 a.Health = HealthCat::Susceptible;
                 a.HasSymptoms = false;
                  a.Municipality = m.BfsId;
@@ -182,6 +197,7 @@ namespace ABM
                 //Setup inhabitants
                 Agent a;
                 a.Household = countHousehold;
+                 a.Workplace = ~0;
                 a.Health = HealthCat::Susceptible;
                 a.HasSymptoms = false;
                  a.Municipality = m.BfsId;
@@ -192,6 +208,7 @@ namespace ABM
                 {
                     Agent a;
                     a.Household = countHousehold;
+                     a.Workplace = ~0;
                     a.Health = HealthCat::Susceptible;
                     a.HasSymptoms = false;
                      a.Municipality = m.BfsId;
@@ -215,6 +232,7 @@ namespace ABM
                 //Setup inhabitants
                 Agent a;
                 a.Household = countHousehold;
+                 a.Workplace = ~0;
                 a.Health = HealthCat::Susceptible;
                 a.HasSymptoms = false;
                  a.Municipality = m.BfsId;
@@ -225,6 +243,7 @@ namespace ABM
                 {
                    Agent a;
                     a.Household = countHousehold;
+                     a.Workplace = ~0;
                     a.Health = HealthCat::Susceptible;
                     a.HasSymptoms = false;
                      a.Municipality = m.BfsId;
@@ -246,6 +265,7 @@ namespace ABM
                 //Setup inhabitants
                 Agent a;
                 a.Household = countHousehold;
+                 a.Workplace = ~0;
                 a.Health = HealthCat::Susceptible;
                 a.HasSymptoms = false;
                  a.Municipality = m.BfsId;
@@ -257,6 +277,7 @@ namespace ABM
                 {
                    Agent a;
                     a.Household = countHousehold;
+                     a.Workplace = ~0;
                     a.Health = HealthCat::Susceptible;
                     a.HasSymptoms = false;
                      a.Municipality = m.BfsId;
@@ -280,6 +301,7 @@ namespace ABM
                 //Setup inhabitants
                 Agent a;
                 a.Household = countHousehold;
+                 a.Workplace = ~0;
                 a.Health = HealthCat::Susceptible;
                 a.HasSymptoms = false;
                  a.Municipality = m.BfsId;
@@ -312,6 +334,7 @@ namespace ABM
                 //Setup inhabitants
                 Agent a;
                 a.Household = countHousehold;
+                 a.Workplace = ~0;
                 a.Health = HealthCat::Susceptible;
                 a.HasSymptoms = false;
                 a.Municipality = m.BfsId;
@@ -405,12 +428,14 @@ namespace ABM
     void Population::assignAgentsToWorkplaces()
     {
         uniform_distribution uniform;
-
+        int countCommute=0;
         //Loop over Municpaltiy. 
         for(const auto& m : Municipalities)
         {   
           
             if(m.commutes.size() == 0) continue;
+
+            std::cout<<m.Id<<" "<<m.Ncommutes<<std::endl;
             multimodal_distribution multimodal(m.commutes);
             std::vector<index_t> workforce = GetWorkforceOfMunicipality(m.Id);
 
@@ -420,7 +445,7 @@ namespace ABM
                 workforce_set.insert(i);
                 
             }
-            
+            countCommute += m.Ncommutes;
             int c =0;
             while(c< m.Ncommutes && !workforce_set.empty())
             {
@@ -448,8 +473,8 @@ namespace ABM
                 
                 //std::cout<<W<<" "<<w_indices.size()<<std::endl;
                 //Pick a workplace rejection sampling over distibution (upper bound for large companies 500); check if the still have open positions else reject
-                    index_t b = workforce[*it];
-                     workforce_set.erase(it);
+                index_t b = workforce[*it];
+                workforce_set.erase(it);
                 while(true)
                 {
                     index_t w_idx = w_indices[uniform.sample_int(0, W)];
@@ -457,7 +482,7 @@ namespace ABM
                     float p = uniform.sample();
                     //std::cout<<p<<" "<<Workplaces[w_idx].MinWorker/1000.0<<std::endl;
                     //Accept
-                    if(p <   (Workplaces[w_idx].MinWorker/1000.0) )//1000 Upper bound for large companies
+                    if(p <   (Workplaces[w_idx].MinWorker/500.0) )//1000 Upper bound for large companies
                     {
                         Agents[b].Workplace = w_idx;
                         Workplaces[w_idx].NWorker++;
@@ -470,7 +495,7 @@ namespace ABM
             }
         }
 
-        std::cout<<"Assigned Workers"<<std::endl;
+        std::cout<<"Assigned "<<countCommute<<" Workers"<<std::endl;
         
     }
 

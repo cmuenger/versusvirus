@@ -50,24 +50,23 @@ std::vector<std::vector<std::string> > import_csv(const std::string filename, bo
 	return dataList;
 }
 
-std::vector<Municipality> importMunicipalies()
+std::vector<HelpCoordinates> importMunicipalies()
 {
-    std::vector<Municipality> municipality;
-    std::vector<std::vector<std::string> > dataList = import_csv("CommutePairs.csv", false);
+    std::vector<HelpCoordinates> municipality;
+    std::vector<std::vector<std::string> > dataList = import_csv("data/Municipalies.csv", false);
 
     for(std::vector<std::string> vec : dataList)
 	{
-        if(vec.size() <=5)
+        if(vec.size() < 4)
         {
             std::cerr<<"Municipality data to small!"<<std::endl;
             exit(-1);
         }
-        Municipality town;
+        HelpCoordinates town;
         
         town.BfsId = std::stoi(vec[0]);
-        town.Name  = vec[1];
-        town.Plz  = std::stoi(vec[2]);
-        town.Coordinates = std::make_pair(std::stod(vec[3]),std::stod(vec[4]));
+        town.Name = vec[1];
+        town.Coordinates = std::make_pair(std::stod(vec[2]),std::stod(vec[3]));
 
         municipality.push_back(town);
     }
@@ -85,7 +84,7 @@ std::tuple<std::vector<HelpPopulation>,std::vector<index_t>,std::map<index_t,ind
 
     for(std::vector<std::string> vec : dataList)
 	{
-        if(vec.size() <8)
+        if(vec.size() <10)
         {
             for(std::string s : vec)
             {
@@ -97,13 +96,14 @@ std::tuple<std::vector<HelpPopulation>,std::vector<index_t>,std::map<index_t,ind
         HelpPopulation town;
         
         town.BfsId = std::stoi(vec[0]);
-        town.NPeople  = std::stoi(vec[1]);
-        town.pYoung = std::stod(vec[3]);
-        town.pMiddle = std::stod(vec[4]);
-        town.pOld = std::stod(vec[5]);
+        town.KId  =  std::stoi(vec[1]);
+        town.NPeople  = std::stoi(vec[3]);
+        town.pYoung = std::stod(vec[5]);
+        town.pMiddle = std::stod(vec[6]);
+        town.pOld = std::stod(vec[7]);
         //town.NHouseholds = std::stoi(vec[6]);
-        town.NWorker = std::stoi(vec[6]);
-        town.NWorkplaces = std::stoi(vec[7]);
+        town.NWorker = std::stoi(vec[8]);
+        town.NWorkplaces = std::stoi(vec[9]);
        
         pop.push_back(town);
         
