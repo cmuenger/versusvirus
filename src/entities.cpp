@@ -482,8 +482,10 @@ namespace ABM
 
         for(int  i=0; i<Agents.size(); i++)
         {
-            AgentsOfHousehold[map[Agents[i].Household]].push_back(i);
-            AgentsOfWorkplace[map[Agents[i].Workplace]].push_back(i);
+           
+            AgentsOfHousehold[Agents[i].Household].push_back(i);
+            if(Agents[i].Workplace != ~0)
+                AgentsOfWorkplace[Agents[i].Workplace].push_back(i);
             AgentsOfMunicipality[map[Agents[i].Municipality]].push_back(i);
         }
     }
