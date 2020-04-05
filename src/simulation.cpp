@@ -7,9 +7,10 @@ namespace ABM
         class Device
         {
             public:
-            static InnerDevice Rng;
-
+            static InnerDevice Gen;
         };
+
+        InnerDevice Device::Gen;
     }
 
     
@@ -23,35 +24,42 @@ namespace ABM
             switch(agent.Health)
             {
                 case HealthCat::Susceptible:
+                {
                     const double l = lambda(agentIdx, population, parameters);
                     const double p = 1. - std::exp(-l*parameters.dt);
-                    if(Rng::Device::Rng.Value() < p)
+                    if(Rng::Device::Gen.Value() < p)
                     {
                         agent.Health = HealthCat::Exposed;
                     }
                     break;
+                }
                 case HealthCat::Exposed:
-                    if(Rng::Device::Rng.Value() < 1/parameters.latency_period*parameters.dt)
+                {
+                    if(Rng::Device::Gen.Value() < 1/parameters.latency_period*parameters.dt)
                     {
                         agent.Health = HealthCat::Infected;
-                        if(Rng::Device::Rng.Value() < parameters.symptomaticPercentage)
+                        if(Rng::Device::Gen.Value() < parameters.symptomaticPercentage)
                         {
                             agent.HasSymptoms = true;
                         }
                     }
                     break;
+                }
                 case HealthCat::Infected:
-                    if(Rng::Device::Rng.Value() < 1./parameters.infection_period*parameters.dt)
+                {
+                    if(Rng::Device::Gen.Value() < 1./parameters.infection_period*parameters.dt)
                     {
                         agent.Health = HealthCat::Recovered;
                     }
                     break;
+                }
                 case HealthCat::Recovered:
                     break;
                 default:
                     // not possible, there are only these 4 states
+                    break;
             }
-        }
+        };
     }
 
     double lambda(const index_t agentIdx, const Population& population, const Parameters& parameters)

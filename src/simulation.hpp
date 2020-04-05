@@ -2,6 +2,7 @@
 #include <math.h>
 #include "entities.hpp"
 #include "parameters.hpp"
+#include "util.hpp"
 
 #pragma once
 

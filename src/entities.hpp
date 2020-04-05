@@ -85,6 +85,8 @@ namespace ABM
     {
         private:
 
+        void setupDistanceWeights();
+
         public:
         SparseMatrix DistanceWeights;
         std::vector<Agent> Agents;

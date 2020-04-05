@@ -1,9 +1,3 @@
-#ifndef UTIL_HPP
-#define UTIL_HPP
-
-
-
-
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -11,6 +5,7 @@
 #include <random>
 #include <math.h>
 
+#pragma once
 
 namespace ABM
 {
@@ -91,7 +86,7 @@ namespace ABM
     {
         protected:
         const int _argc;
-        const char** _argv;
+        char** _argv;
         std::vector<char> _options;
         std::vector<std::string> _optArgs;
         std::vector<std::string> _helplines;
@@ -105,7 +100,7 @@ namespace ABM
 
         public:
 
-        CommandLineInterface(const int argc, const char** argv);
+        CommandLineInterface(const int argc, char** argv);
 
         void PrintHelp() const;
         virtual void ParseArgs();

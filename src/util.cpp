@@ -57,7 +57,7 @@ namespace ABM
         return 1./(1. + std::pow( dist/param_a, param_b) );
     }
 
-    CommandLineInterface::CommandLineInterface(const int argc, const char** argv)
+    CommandLineInterface::CommandLineInterface(const int argc, char** argv)
     : _argc(argc), _argv(argv), _helplines(std::vector<std::string>())
     {
         AddHelpline("-h x", "Print this help");

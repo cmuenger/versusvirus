@@ -10,7 +10,7 @@ namespace ABM
 	// Input: population, municipality vector indexed by BfsIds and int for date
 	// Side effect: creates a folder with date as name and containing all heat maps,
 	// and possibly a jason with further data to be desplayed on the website.
-    void vizualize(Population& population, std::vector<Municipality>& municipalities;  int date){
+    void vizualize(Population& population, std::vector<Municipality>& municipalities,  int date){
 
     	// create output map to store values
     	int* household_map	= (int) calloc(4*MAP_WIDTH*MAP_HEIGHT,sizeof(int));
