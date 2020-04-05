@@ -11,30 +11,16 @@ using namespace ABM;
 
 int main(int argc, char** argv)
 {
-    //TEST
+    // -------------------------------------------------------
+    // perform initialisation
+
     std::vector<HelpPopulation> pop;
     std::vector<Commuter> commuters;
     std::vector<HelpHousehold> households;
-    std::map<index_t,index_t> map;
+    std::map<index_t,index_t> bfsIdToIdx_map;
     std::vector<index_t> id;
 
-    std::tie(pop,id,map) = ABM::importHelpPopulation();
-
-    /*//std::cout<<pop.size()<<std::endl;
-    std::vector<int> companysize{519215,48848,8909,1564};
-
-    std::vector<int> samples(4,0);
-
-    std::cout<<ABM::sample_multimodal(companysize)<<std::endl;
-    for(int i=0;i<580000; i++)
-    {
-        samples[ABM::sample_multimodal(companysize)]++;
-    }
-
-    for(auto i : samples)
-    {
-        std::cout<<i<<std::endl;
-    }*/
+    std::tie(pop,id,bfsIdToIdx_map) = ABM::importHelpPopulation();
 
     commuters = ABM::importCommuter();
 
@@ -42,7 +28,7 @@ int main(int argc, char** argv)
 
     Population p;
 
-    p.createMunicipalities(pop,commuters,map);
+    p.createMunicipalities(pop,commuters,bfsIdToIdx_map);
 
     std::cout<<p.Municipalities.size()<<std::endl;
     int sum =0;
@@ -90,7 +76,7 @@ int main(int argc, char** argv)
     p.createHouseholds(pop,households);
 
     p.createLookUpTableForWorkplaces();
-    p.createLookUpTableForAgents(map);
+    p.createLookUpTableForAgents(bfsIdToIdx_map);
 
     p.assignAgentsToWorkplaces();
 
@@ -120,6 +106,12 @@ int main(int argc, char** argv)
         }
     }
 
+    Parameters parameters;
+
+    std::cout << "starting distance initialisation..." << std::endl;
+    p.setupDistanceWeights(p.Municipalities, bfsIdToIdx_map, parameters);
+    std::cout << "  -- passed" << std::endl;
+
     // END TEST
 
     //---------------------------
@@ -144,7 +136,7 @@ int main(int argc, char** argv)
     CommandLineInterface cli(argc, argv);
     cli.ParseArgs();
 
-    Parameters parameters; // init here <--------------------------
+    parameters.dt = cli.getTimeDelta();
 
     //for(int t = 0; t < cli.getTimeHorizon(); t += cli.getTimeDelta())
     for(int t = 0; t < 1; t ++)
