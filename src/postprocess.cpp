@@ -7,7 +7,25 @@
 namespace ABM
 {
 
+	// Input: number of different type of people on pixel
+	// Output: rgb values for the pixel
+	std::tuple<int,int,int> get_color(float susceptible, float exposed, float infected, float recovered){
+		float total = susceptible + exposed + infected + recovered;
+		// susectible is green, exposed is yellow (means it is added to red and green in equal parts)
+		// infected is red and recovered is blue
+		int red = std::round(255*((susceptible + 0.5*exposed)/total));
+		int green = std::round(255*((exposed + 0.5*exposed)/total));
+		int blue = std::round(255*(recovered/total));
+		std::tuple<int,int,int> rgb = std::make_tuple(red,green,blue);
+		return rgb;
+	}
+
+	// Input: int array[hight][width][4] with data for each geographical location (hight, width)
+	// that gives the Susceptible, Exposed, Infected and Recovered on the 4 channels
+	// Side effect: genereate heat map png from the given map.
 	void create_heatmap(int*** infection_map, int date, std::string name){
+
+		std::cout << "starting write of " << name << " date " << date << std::endl;
 
 		// ensure the directory existst
 		std::string dir = "day" + std::to_string(date);
@@ -22,24 +40,60 @@ namespace ABM
 		int i_map_y = 0;
 		int x_step = MAP_WIDTH/PIC_WIDTH;
 		int y_step = MAP_HEIGHT/PIC_HEIGHT;
-		int heat_map[PIC_WIDTH][PIC_HEIGHT][4] = {};
+		int heat_map1[PIC_WIDTH][PIC_HEIGHT][4] = {};
+		int heat_map2[PIC_WIDTH][PIC_HEIGHT][4] = {};
 		for(int column = 0; column < PIC_WIDTH; column++){
 			for (int row = 0; row < PIC_HEIGHT; row++){
 				// copy data over into correct size
 				for(; i_map_x < x_step*(column+1) && i_map_x < MAP_WIDTH; i_map_x++){
 					for(; i_map_y < y_step*(row+1) && i_map_y < MAP_HEIGHT; i_map_y++){
-						heat_map[column][row][0] += infection_map[i_map_x][i_map_y][0];
-						heat_map[column][row][1] += infection_map[i_map_x][i_map_y][1];
-						heat_map[column][row][2] += infection_map[i_map_x][i_map_y][2];
-						heat_map[column][row][3] += infection_map[i_map_x][i_map_y][3];
+						heat_map1[column][row][0] += infection_map[i_map_x][i_map_y][0];
+						heat_map1[column][row][1] += infection_map[i_map_x][i_map_y][1];
+						heat_map1[column][row][2] += infection_map[i_map_x][i_map_y][2];
+						heat_map1[column][row][3] += infection_map[i_map_x][i_map_y][3];
 					}
 				}
-				// low pass to get color everywhere
-				//TODO
+			}
+		}
+
+		// low pass over picture to distrubute color
+		for(int column = LOW_PASS_X; column < PIC_WIDTH - LOW_PASS_X-1; column++){
+			for(int row = LOW_PASS_Y; row < PIC_HEIGHT - LOW_PASS_Y-1; row++){
+				float sus = 0;
+				float exp = 0;
+				float inf = 0;
+				float rec = 0;
+				for(int i = -LOW_PASS_X; i <= LOW_PASS_X; i++){
+					for(int j = -LOW_PASS_Y; j <= LOW_PASS_Y; j++){
+						sus += heat_map1[column+i][row+j][0];
+						exp += heat_map1[column+i][row+j][1];
+						inf += heat_map1[column+i][row+j][2];
+						rec += heat_map1[column+i][row+j][3];
+					}
+				}
+				heat_map2[column][row][0] = std::round(sus/((2*LOW_PASS_X+1)*(2*LOW_PASS_Y+1)));
+				heat_map2[column][row][1] = std::round(exp/((2*LOW_PASS_X+1)*(2*LOW_PASS_Y+1)));
+				heat_map2[column][row][2] = std::round(inf/((2*LOW_PASS_X+1)*(2*LOW_PASS_Y+1)));
+				heat_map2[column][row][3] = std::round(rec/((2*LOW_PASS_X+1)*(2*LOW_PASS_Y+1)));
 			}
 		}
 
 		png::image heat_map_png = png::image<png::rgba_pixel>(PIC_WIDTH,PIC_HEIGHT);
+
+		// get colors for all channels and set alpha to some value
+		for(int column = 0; column < PIC_WIDTH; column++){
+			for(int row = 0; row < PIC_HEIGHT; row++){
+				auto [red, green, blue] = 
+					get_color(
+						(float) heat_map2[column][row][0],
+						(float) heat_map2[column][row][1],
+						(float) heat_map2[column][row][2],
+						(float) heat_map2[column][row][3]);
+				png::rgba_pixel pixel = png::rgba_pixel(red,green,blue,ALPHA);
+				heat_map_png.set_pixel(column,row,pixel);
+			}
+		}
+
 		heat_map_png.write(fname);
 
 		return;
@@ -49,6 +103,8 @@ namespace ABM
 	// Side effect: creates a folder with date as name and containing all heat maps,
 	// and possibly a jason with further data to be desplayed on the website.
     void vizualize(Population& population, int date){
+
+    	std::cout << "starting visualization of day " << date << std::endl;
 
     	// create output map to store values tripple * for 3 dimenstional array
     	int*** household_map= (int***) calloc(4*MAP_WIDTH*MAP_HEIGHT,sizeof(int));
