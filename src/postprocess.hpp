@@ -1,4 +1,5 @@
 #include <iostream>
+#include <tuple>
 
 #include "entities.hpp"
 
@@ -21,12 +22,17 @@
 #define LOW_PASS_X  10
 #define LOW_PASS_Y	10
 
+#define ALPHA 		100
+
 namespace ABM
 {
 
+	// Input: number of different type of people on pixel
+	// Output: rgb values for the pixel
+	std::tuple<int,int,int> get_color(int susceptible, int exposed, int infected, int recovered);
 
 
-	// Input int array[hight][width][4] with data for each geographical location (hight, width)
+	// Input: int array[hight][width][4] with data for each geographical location (hight, width)
 	// that gives the Susceptible, Exposed, Infected and Recovered on the 4 channels
 	// Side effect: genereate heat map png from the given map.
 	void create_heatmap(int*** infection_map, int date, std::string name);
