@@ -14,7 +14,7 @@
 #define UR_Y		295931.120	// y coordinate of the upper right corner of the picture
 #define MAP_WIDTH	3484		// one bin for 100m of map to be covered (2833806.0-2485487.6)/100
 #define MAP_HEIGHT 	2207		// one bin for 100m of map to be covered (1295931.0-1075275.4)/100
-#define BIN_SIZE	100
+#define BIN_SIZE	1000
 
 // picture parameters
 #define PIC_WIDTH 	640
@@ -30,7 +30,7 @@ namespace ABM
 
 	// Input: data for the 26 cantons on the number of each kind of health states
 	// Side effect, creates a json containing all data
-	void create_json(const int data[26][4], std::string name);
+	void create_json(const int data[26*4], std::string name);
 
 	// Input: number of different type of people on pixel
 	// Output: rgb values for the pixel

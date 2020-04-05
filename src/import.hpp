@@ -242,7 +242,7 @@ void computeCommute(std::vector<Commuter> commuters, std::vector<HelpPopulation>
        b += it.second;
     }
 
-    std::cout<<a<<" "<<b<<std::endl;
+    // std::cout<<a<<" "<<b<<std::endl;
 }
 
 int sample_multimodal(std::vector<int> modes)

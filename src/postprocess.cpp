@@ -10,8 +10,8 @@
 namespace ABM
 {
 
-	void create_json(const int data[26][4], std::string name){
-
+	void create_json(const int* data, std::string name){
+		
 	}
 
 
@@ -132,7 +132,7 @@ namespace ABM
     	int* old_map 		= (int*) calloc(4*MAP_WIDTH*MAP_HEIGHT,sizeof(int));
 
     	// data for jason, output
-    	int cantons[26][4] = {}; // TODO USE THIS
+    	int* kantons = (int*) calloc(4*26,sizeof(int)); // TODO USE THIS
 
     	// some shortcuts to make it more readable
     	const std::vector<Household>& households = population.Households;
@@ -147,17 +147,17 @@ namespace ABM
     		index_t house_m = households[agent_iter.Household].Municipality;
     		index_t workp_m = workplaces[agent_iter.Workplace].Municipality;
 
-    		// increase canton counter
-
     		// get coordinates for map to access
+    		// std::cout << municipalities[house_m].Coordinates.first << std::endl;
 			std::pair<double,double> house_coord = municipalities[house_m].Coordinates;
 			std::pair<double,double> workp_coord = municipalities[workp_m].Coordinates;
+			//std::cout << house_coord.first << std::endl;
 
-
+			index_t kanton_id = municipalities[house_m].KId;
 
 			// get to array indexes
 			//std::cout << "house_coord.first " << house_coord.first << std::endl;
-			//int house_x_coord = std::round(house_coord.first - LL_X)/(BIN_SIZE*10);
+			//int house_x_coord = std::round(house_coord.first - LL_X)/BIN_SIZE;
 			//int house_y_coord = std::round(house_coord.second - LL_X)/BIN_SIZE;
 			//int workp_x_coord = std::round(workp_coord.first - LL_X)/BIN_SIZE;
 			//int workp_y_coord = std::round(workp_coord.second - LL_Y)/BIN_SIZE;
@@ -211,6 +211,9 @@ namespace ABM
 			// TODO delete
 			health = 2;
 
+			// increment canton counters
+			kantons[kanton_id*4 + health] += 1;
+
 			// increment all maps
 			household_map[4*(house_x_coord*MAP_HEIGHT + house_y_coord) + health] += 1;
 			workplace_map[4*(workp_x_coord*MAP_HEIGHT + workp_y_coord) + health] += 1;
@@ -222,7 +225,7 @@ namespace ABM
 			
     	}
 
-    	create_json(cantons, dir+"/cases");
+    	create_json(kantons, dir+"/cases");
 
     	create_heatmap(household_map, dir+"/house");
     	create_heatmap(workplace_map, dir+"/work");
@@ -230,6 +233,7 @@ namespace ABM
     	create_heatmap(middle_map, dir+"/middle");
     	create_heatmap(old_map, dir+"/old");
 
+    	free(kantons);
     	free(household_map);
     	free(workplace_map);
     	free(young_map);
