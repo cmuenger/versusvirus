@@ -41,7 +41,52 @@ int main(int argc, char** argv)
 
     households = ABM::importHouseholds();
 
-    std::cout<<households[3].NHouseholds<<std::endl;
+    Population p;
+
+    p.createMunicipalities(pop,commuters);
+
+    std::cout<<p.Municipalities.size()<<std::endl;
+    int sum =0;
+    for(const auto& m : p.Municipalities)
+    {
+        sum+=m.MaxWorker;
+    }
+    std::cout<<"Workforce:"<<sum<<std::endl;
+
+    p.createWorkplaces();
+
+    std::cout<<p.Workplaces.size()<<std::endl;
+
+    std::vector<std::tuple<index_t, index_t, index_t, index_t>> histo;
+    
+    for(const auto& m : p.Municipalities)
+    {
+
+        histo.push_back(std::make_tuple(0,0,0,0));
+    }
+
+    for(const auto& w : p.Workplaces)
+    {
+        if(w.Size == WorkCat::Global)
+            std::get<0>(histo[w.Municipality])++;
+        if(w.Size == WorkCat::Large)
+            std::get<1>(histo[w.Municipality])++;
+        if(w.Size == WorkCat::Medium)
+            std::get<2>(histo[w.Municipality])++;
+        if(w.Size == WorkCat::Small)
+            std::get<3>(histo[w.Municipality])++;
+    }
+
+
+    for(int i=0; i<histo.size(); i++)
+    {
+        std::cout<<i<<" "<<p.Municipalities[i].MaxWorker<<" "
+                 <<std::get<0>(histo[i])<<" "
+                  <<std::get<1>(histo[i])<<" "
+                   <<std::get<2>(histo[i])<<" "
+                    <<std::get<3>(histo[i])<<std::endl;
+
+    }
 
     // END TEST
 

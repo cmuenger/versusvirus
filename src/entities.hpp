@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <random>
+#include <map>
 
 #include "util.hpp"
 #include "parameters.hpp"
@@ -52,6 +53,7 @@ namespace ABM
         std::string Name;
         std::pair<double,double> Coordinates;
         index_t Plz;
+        index_t NPeople;
         index_t NHouseholds;
         index_t NWorker;
         index_t NWorkplaces;
@@ -109,6 +111,10 @@ namespace ABM
         std::vector<Workplace> Workplaces;
         std::vector<Municipality> Municipalities;
 
+        std::vector<std::vector<index_t>> AgentsOfHousehold;
+        std::vector<std::vector<index_t>> AgentsOfWorkplace;
+        std::vector<std::vector<index_t>> WorkplacesOfMunicipality;
+
 
 
         // Initilize class and fill Agents, Households and Workplaces see Figure 2 in "Additional file"
@@ -120,7 +126,10 @@ namespace ABM
         void assignAgentsToWorkplaces( /* data */);
 
         void createWorkplaces();
+        void createMunicipalities(std::vector<HelpPopulation> pop, std::vector<Commuter> com);
 
+        void createLookUpTableForAgents(std::map<index_t,index_t> map);
+        void createLookUpTableForWorkplaces();
 
         std::vector<index_t> GetAgentsOfHousehold(index_t hhIdx) const;
         std::vector<index_t> GetAgentsOfWorkplace(index_t wpIdx) const;

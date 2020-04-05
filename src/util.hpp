@@ -71,20 +71,19 @@ namespace ABM
     {
         //std::random_device rd;
         std::mt19937 gen;
-        std::uniform_real_distribution<> dis;
+        std::uniform_real_distribution<double> dis;
 
         std::vector<int> p;
         double N;
         public:
         uniform_distribution()   
-            : gen(), dis(), N(0)
+            : gen(), dis(0.0,1.0), N(0)
         {        }
 
         int sample_int( const int a, const int b)
         {
             double random = dis(gen);
-
-            return (int)random*(b-a)+a;
+            return (int)(random*(b-a)+a);
         }
 
         double sample()

@@ -63,11 +63,40 @@ namespace ABM
         DistanceWeights = SparseMatrix(triples);
     }
 
+    void Population::createMunicipalities(std::vector<HelpPopulation> pop, std::vector<Commuter> com)
+    {
+        for(const auto& p : pop)
+        {
+            Municipality m;
+            m.BfsId = p.BfsId;
+            m.NHouseholds = p.NHouseholds;
+            m.MaxWorker = p.NWorker;
+            m.NWorker = 0;
+            m.MaxWorkplaces = p.NWorkplaces;
+            m.NWorkplaces = 0;
+            
+            //Add commutes
+            for(const auto c : com)
+            {
+                if(m.BfsId == c.BfsId)
+                {
+                    if(c.WorkId != 7777)
+                    {
+                        m.commutes_map.push_back(c.WorkId);
+                        m.commutes.push_back(c.NCommuters);
+                    }
+                }
+            }
+
+            Municipalities.push_back(m);
+        }
+    }
+
     void Population::createWorkplaces()
     {
          uniform_distribution uniform;
 
-        std::vector<int> company_min_size = {250,5,10,1};
+        std::vector<int> company_min_size = {250,50,10,1};
         std::vector<int> n_company = {1564, 8909, 48848, 519216};
 
         index_t maxWorker =0;
@@ -79,33 +108,51 @@ namespace ABM
         for(int c=0; c<company_min_size.size();c++ )
         {
             index_t M = Municipalities.size();
-            
-            while(true)
+            std::cout<<n_company[c]<<std::endl;
+            for(int n =0; n<n_company[c]; n++)
             {
-                index_t m_idx = uniform.sample_int(0, M);
-
-                //check if still enough empty workplace exist;
-                if(Municipalities[m_idx].NWorker >= Municipalities[m_idx].MaxWorker - company_min_size[c]) continue;
-                //check if still enough worker are available;
-                if(Municipalities[m_idx].NWorkplaces >= Municipalities[m_idx].MaxWorkplaces - 1) continue;
-
-                //Rejection sampling
-                float p = uniform.sample();
-                //Accept
-                if(p <  Municipalities[m_idx].MaxWorker/(company_min_size[c]*M))
+              
+                while(true)
                 {
-                    Workplace w;
-                    w.Municipality = m_idx;
-                    w.Size = WorkCat::Global;
+                    index_t m_idx = uniform.sample_int(0, M);
+                    //std::cout<<m_idx<<std::endl;
+                    //check if still enough empty workplace exist;
+                      if(Municipalities[m_idx].NWorker > Municipalities[m_idx].MaxWorker - company_min_size[c]) continue;
+                    //check if still enough worker are available;
+                    if(Municipalities[m_idx].NWorkplaces > Municipalities[m_idx].MaxWorkplaces ) continue;
 
-                    Workplaces.push_back(w);
+                    //Rejection sampling
+                    float p = uniform.sample();
+                    //Accept
+                    //(std::cout<<p<<" "<<Municipalities[m_idx].MaxWorker/(float)(company_min_size[c]*M)<<std::endl;
+                    if(p <  Municipalities[m_idx].MaxWorker/(float)(company_min_size[c]*M))
+                    {
+                        Workplace w;
+                        w.Municipality = m_idx; //Municipalities[m_idx].BfsId;
+                        w.Size =  c==0 ? WorkCat::Global : (c==1 ? WorkCat::Large : (c==2 ? WorkCat::Medium : WorkCat::Small));
 
-                    Municipalities[m_idx].NWorker+=company_min_size[c];
-                    Municipalities[m_idx].NWorkplaces += 1;
-                    break;
+                        Workplaces.push_back(w);
+
+                        Municipalities[m_idx].NWorker+=company_min_size[c];
+                        Municipalities[m_idx].NWorkplaces += 1;
+
+                        //std::cout<<"accept"<<std::endl;
+                        break;
+                    }
+                    else
+                    {
+                        //std::cout<<"reject"<<std::endl;
+                    }
+                    
                 }
             }
 
+        }
+
+        //Reset worker since they will be assign later;
+        for(auto& m : Municipalities)
+        {
+            m.NWorker = 0;
         }
     }
 
@@ -137,7 +184,7 @@ namespace ABM
             }
 
             //Pick a commute. Multimodal distribution of commutes by size
-            index_t c_idx =  multimodal.sample();        
+            index_t c_idx = m.commutes_map[multimodal.sample()];        
                 
             //TODO sample cantons at random for unspecifed commutes
 
@@ -162,15 +209,43 @@ namespace ABM
         
     }
 
+    void Population::createLookUpTableForAgents(std::map<index_t,index_t> map)
+    {
+        AgentsOfHousehold.resize(Households.size());
+        AgentsOfWorkplace.resize(Workplaces.size());
+
+        for(int  i=0; i<Agents.size(); i++)
+        {
+            AgentsOfHousehold[map[Agents[i].Household]].push_back(i);
+            AgentsOfWorkplace[map[Agents[i].Workplace]].push_back(i);
+        }
+    }
+
+    void Population::createLookUpTableForWorkplaces()
+    {
+        WorkplacesOfMunicipality.resize(Municipalities.size());
+        
+        for(int i=0; i<Workplaces.size(); i++)
+        {
+            WorkplacesOfMunicipality[Workplaces[i].Municipality].push_back(i);
+        }
+    }
+
+    std::vector<index_t> Population::GetWorkplacesOfMunicipality(index_t c_idx) const
+    {
+        return WorkplacesOfMunicipality[c_idx];
+    }
+
 
     std::vector<index_t> Population::GetAgentsOfHousehold(index_t hhIdx) const
     {
-        throw "Not yet implemented";
+        return AgentsOfHousehold[hhIdx];
+        
     }
 
     std::vector<index_t> Population::GetAgentsOfWorkplace(index_t wpIdx) const
     {
-        throw "Not yet implemented";
+        return AgentsOfWorkplace[wpIdx];
     }
 
     index_t Population::GetRandomAdultOfHousehold(index_t hIdx) const
