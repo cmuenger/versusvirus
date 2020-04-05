@@ -125,7 +125,7 @@ namespace ABM
 
         void assignAgentsToWorkplaces( /* data */);
 
-        void createWorkplaces();
+        void createHouseholds(std::vector<HelpPopulation> pop, std::vector<HelpHousehold> house);        void createWorkplaces();
         void createMunicipalities(std::vector<HelpPopulation> pop, std::vector<Commuter> com);
 
         void createLookUpTableForAgents(std::map<index_t,index_t> map);

@@ -92,6 +92,213 @@ namespace ABM
         }
     }
 
+    void Population::createHouseholds(std::vector<HelpPopulation> pop, std::vector<HelpHousehold> house)
+    {
+        index_t countHousehold=0;
+        for(const auto& m : Municipalities)
+        {
+            const auto& itp = std::find_if(pop.begin(), pop.end(),[&](const auto& val){ return val.BfsId == m.BfsId; }  );
+            if(itp == pop.end())
+            {
+                std::cerr<<"Pop data not found"<<std::endl;
+            }
+           
+            multimodal_distribution multimodal_adult({(index_t)std::round(itp->pMiddle*itp->NPeople), (index_t)std::round(itp->pOld)});
+            multimodal_distribution multimodal_age({(index_t)std::round(itp->pYoung*itp->NPeople),(index_t)std::round(itp->pMiddle*itp->NPeople), (index_t)std::round(itp->pOld)});
+            
+            const auto& it = std::find_if(house.begin(), house.end(),[&](const auto& val){ return val.BfsId == m.BfsId; }  );
+            if(it == house.end())
+            {
+                std::cerr<<"House data not found"<<std::endl;
+            }
+
+            auto getAdultAge =[&] () {
+                index_t cat = multimodal_adult.sample();
+                if(cat == 0)
+                    return AgeCat::Adult;
+                else
+                    return AgeCat::Old;
+            };
+
+            auto getAge =[&] () {
+                index_t cat = multimodal_age.sample();
+                if(cat == 0)
+                    return AgeCat::Minor;
+                else if(cat == 1)
+                    return AgeCat::Adult;
+                else
+                    return AgeCat::Old;
+            };
+
+            //Create Single Households
+            for(int i=0; i< it->P1; i++)
+            {
+                //Setup household
+                Household h;
+                countHousehold++;
+                h.Municipality = m.BfsId;
+                Households.push_back(h);
+
+                //Setup inhabitants
+                Agent a;
+                a.Household = countHousehold;
+                a.Health = HealthCat::Susceptible;
+                a.HasSymptoms = false;
+                a.Age = getAdultAge();
+
+                Agents.push_back(a);
+            }
+
+            //Create Double Households
+            for(int i=0; i< it->P2; i++)
+            {
+                //Setup household
+                Household h;
+                countHousehold++;
+                h.Municipality = m.BfsId;
+                Households.push_back(h);
+
+                //Setup inhabitants
+                Agent a;
+                a.Household = countHousehold;
+                a.Health = HealthCat::Susceptible;
+                a.HasSymptoms = false;
+                a.Age = getAdultAge();
+                Agents.push_back(a);
+                
+                for(int i=0; i<1; i++)
+                {
+                    Agent a;
+                    a.Household = countHousehold;
+                    a.Health = HealthCat::Susceptible;
+                    a.HasSymptoms = false;
+                    a.Age = getAge();
+                    Agents.push_back(a);
+                }
+            }
+
+
+            //Create Triple Households
+            for(int i=0; i< it->P3; i++)
+            {
+                //Setup household
+                Household h;
+                countHousehold++;
+                h.Municipality = m.BfsId;
+                Households.push_back(h);
+
+                //Setup inhabitants
+                Agent a;
+                a.Household = countHousehold;
+                a.Health = HealthCat::Susceptible;
+                a.HasSymptoms = false;
+                a.Age = getAdultAge();
+                Agents.push_back(a);
+
+                for(int i=0; i<2; i++)
+                {
+                   Agent a;
+                    a.Household = countHousehold;
+                    a.Health = HealthCat::Susceptible;
+                    a.HasSymptoms = false;
+                    a.Age = getAge();
+                    Agents.push_back(a);
+                }
+            }
+
+            //Create Quadruple Households
+            for(int i=0; i< it->P1; i++)
+            {
+                //Setup household
+                Household h;
+                countHousehold++;
+                h.Municipality = m.BfsId;
+                Households.push_back(h);
+
+                //Setup inhabitants
+                Agent a;
+                a.Household = countHousehold;
+                a.Health = HealthCat::Susceptible;
+                a.HasSymptoms = false;
+                a.Age = getAdultAge();
+
+                Agents.push_back(a);
+
+                for(int i=0; i<3; i++)
+                {
+                   Agent a;
+                    a.Household = countHousehold;
+                    a.Health = HealthCat::Susceptible;
+                    a.HasSymptoms = false;
+                    a.Age = getAge();
+
+                    Agents.push_back(a);
+                }
+            }
+
+
+             //Create Quintett Households
+            for(int i=0; i< it->P1; i++)
+            {
+                //Setup household
+                Household h;
+                countHousehold++;
+                h.Municipality = m.BfsId;
+                Households.push_back(h);
+
+                //Setup inhabitants
+                Agent a;
+                a.Household = countHousehold;
+                a.Health = HealthCat::Susceptible;
+                a.HasSymptoms = false;
+                a.Age = getAdultAge();
+
+                Agents.push_back(a);
+
+                for(int i=0; i<4; i++)
+                {
+                   Agent a;
+                    a.Household = countHousehold;
+                    a.Health = HealthCat::Susceptible;
+                    a.HasSymptoms = false;
+                    a.Age = getAge();
+
+                    Agents.push_back(a);
+                } 
+            }
+
+            //Create Sextett Households
+            for(int i=0; i< it->P1; i++)
+            {
+                //Setup household
+                Household h;
+                countHousehold++;
+                h.Municipality = m.BfsId;
+                Households.push_back(h);
+
+                //Setup inhabitants
+                Agent a;
+                a.Household = countHousehold;
+                a.Health = HealthCat::Susceptible;
+                a.HasSymptoms = false;
+                a.Age = getAdultAge();
+
+                Agents.push_back(a);
+
+                for(int i=0; i<5; i++)
+                {
+                   Agent a;
+                    a.Household = countHousehold;
+                    a.Health = HealthCat::Susceptible;
+                    a.HasSymptoms = false;
+                    a.Age = getAge();
+
+                    Agents.push_back(a);
+                }
+            }
+        }
+    }
+
     void Population::createWorkplaces()
     {
          uniform_distribution uniform;

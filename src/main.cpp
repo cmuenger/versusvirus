@@ -88,6 +88,8 @@ int main(int argc, char** argv)
 
     }
 
+    p.createHouseholds(pop,households);
+
     // END TEST
 
     //---------------------------
