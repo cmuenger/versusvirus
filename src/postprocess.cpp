@@ -1,9 +1,41 @@
 #include "postprocess.hpp"
+#include <iostream>
+#include <filesystem>
 
 namespace ABM
 {
 
 	void create_heatmap(int*** infection_map, int date, std::string name){
+
+		// ensure the directory existst
+		std::string dir = "day" + std::to_string(date);
+
+		if(!std::filesystem::exists(dir)){
+			std::filesystem::create_directory(dir);
+		}
+
+		// create array in the right size of the picutre
+		int i_map_x = 0;
+		int i_map_y = 0;
+		int x_step = MAP_WIDTH/PIC_WIDTH;
+		int y_step = MAP_HEIGHT/PIC_HEIGHT;
+		int[PIC_WIDTH][PIC_HEIGHT][4] heat_map = 0;
+		for(int column = 0; column < PIC_WIDTH; column++){
+			for (int row = 0; row < PIC_HEIGHT; row++){
+				// copy data over into correct size
+				for(; i_map_x < x_step*(column+1) && i_map_x < MAP_WIDTH; i_map_x++){
+					for(; i_map_y < y_step*(row+1) && i_map_y < MAP_HEIGHT; i_map_y++){
+						heat_map[column][row][0] += infection_map[i_map_x][i_map_y][0];
+						heat_map[column][row][1] += infection_map[i_map_x][i_map_y][1];
+						heat_map[column][row][2] += infection_map[i_map_x][i_map_y][2];
+						heat_map[column][row][3] += infection_map[i_map_x][i_map_y][3];
+					}
+				}
+				// low pass to get color everywhere
+				
+			}
+		}
+
 		return;
 	}
 

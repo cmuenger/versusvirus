@@ -13,13 +13,13 @@ simulation.o: simulation.hpp simulation.cpp
 	g++ --std=c++17 -O3 simulation.cpp -c
 
 postprocess.o: postprocess.hpp postprocess.cpp
-	g++ --std=c++17 -O3 postprocess.cpp -c
+	g++ --std=c++17 -O3 postprocess.cpp -c -lstdc++fs
 
 main.o: main.cpp
 	g++ --std=c++17 -O3 main.cpp -c
 
 simulation: util.o entities.o parameters.o simulation.o postprocess.o main.o
-	g++ --std=c++17 -O3 util.o entities.o parameters.o simulation.o postprocess.o main.o -o simulation
+	g++ --std=c++17 -O3 util.o entities.o parameters.o simulation.o postprocess.o main.o -o simulation -lstdc++fs
 
 clean:
 	rm -f *.o

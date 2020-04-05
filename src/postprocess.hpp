@@ -18,6 +18,9 @@
 #define PIC_WIDTH 	640
 #define PIC_HEIGHT 	480
 
+#define LOW_PASS_X  10
+#define LOW_PASS_Y	10
+
 namespace ABM
 {
 
