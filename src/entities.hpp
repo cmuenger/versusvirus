@@ -104,7 +104,7 @@ namespace ABM
     {
         private:
 
-        void setupDistanceWeights(std::vector<Municipality>& municipalities, const Parameters& parameters);
+        
 
         public:
         SparseMatrix DistanceWeights;
@@ -123,6 +123,8 @@ namespace ABM
         // Initilize class and fill Agents, Households and Workplaces see Figure 2 in "Additional file"
         Population(/* data */)
         {}
+
+        void setupDistanceWeights(std::vector<Municipality>& municipalities, std::map<index_t, index_t>& map, const Parameters& parameters);
 
         void assignAgentsToHouseholds( /* data */);
 

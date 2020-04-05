@@ -33,18 +33,20 @@ namespace ABM
         return Health == HealthCat::Infected? 1. : 0.;
     }
 
-    void Population::setupDistanceWeights(std::vector<Municipality>& municipalities, const Parameters& parameters)
+    void Population::setupDistanceWeights(
+        std::vector<Municipality>& municipalities, 
+        std::map<index_t, index_t>& map, const Parameters& parameters)
     {
         std::vector<std::tuple<size_t, size_t, double>> triples = std::vector<std::tuple<size_t, size_t, double>>();
         for(size_t aIdx = 0; aIdx < Agents.size(); aIdx++)
         {
-            const Municipality& ahh = municipalities[Households[Agents[aIdx].Household].Municipality];
-            const Municipality& awp = municipalities[Workplaces[Agents[aIdx].Workplace].Municipality];
+            const Municipality& ahh = municipalities[map[Households[Agents[aIdx].Household].Municipality]];
+            const Municipality& awp = municipalities[map[Workplaces[Agents[aIdx].Workplace].Municipality]];
             
             for(size_t bIdx = 0; bIdx < Agents.size(); bIdx++)
             {     
-                const Municipality& bhh = municipalities[Households[Agents[bIdx].Household].Municipality];
-                const Municipality& bwp = municipalities[Workplaces[Agents[bIdx].Workplace].Municipality];
+                const Municipality& bhh = municipalities[map[Households[Agents[bIdx].Household].Municipality]];
+                const Municipality& bwp = municipalities[map[Workplaces[Agents[bIdx].Workplace].Municipality]];
 
                 double dist1 = Dist(ahh.Coordinates, bhh.Coordinates, parameters.a_dist, parameters.b_dist);
                 double dist2 = Dist(ahh.Coordinates, bwp.Coordinates, parameters.a_dist, parameters.b_dist);
