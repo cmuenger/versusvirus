@@ -87,7 +87,7 @@ namespace ABM
             const Agent coworker = population.Agents[coworkerIdx];
             
             // todo: distinct between different workplaces
-            tmp += coworker.Get_I()*coworker.Get_c(parameters.symptomaticPercentage)*parameters.beta_workplace*parameters.phi_workplace[0];
+            tmp += coworker.Get_I()*coworker.Get_c(parameters.symptomaticPercentage)*parameters.beta_workplace*parameters.phi_workplace;
         }
         const double npj = population.GetAgentsOfWorkplace(agent.Workplace).size();
         l += tmp/npj;

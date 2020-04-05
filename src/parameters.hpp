@@ -17,7 +17,7 @@ namespace ABM
         double beta_workplace;
         double beta_commuting;
 
-        std::vector<double> phi_workplace;
+        double phi_workplace;
 
 
         double a_dist;
@@ -31,8 +31,7 @@ namespace ABM
 
         double dt;
 
-        Parameters(/* data */)
-        : alpha(0.8), a_dist(3.8), b_dist(2.32), phi_workplace(std::vector<double>()) {}
+        Parameters();
 
     };
 }
