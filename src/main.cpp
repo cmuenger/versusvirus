@@ -136,10 +136,10 @@ int main(int argc, char** argv)
     CommandLineInterface cli(argc, argv);
     cli.ParseArgs();
 
-    
     parameters.dt = cli.getTimeDelta();
 
-    for(int t = 0; t < cli.getTimeHorizon(); t += cli.getTimeDelta())
+    //for(int t = 0; t < cli.getTimeHorizon(); t += cli.getTimeDelta())
+    for(int t = 0; t < 1; t ++)
     {
         PerformTimeStep(p, parameters);
         // export population for output? <-------------------------
