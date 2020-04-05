@@ -14,14 +14,14 @@
 #define UR_Y		295931.120	// y coordinate of the upper right corner of the picture
 #define MAP_WIDTH	3484		// one bin for 100m of map to be covered (2833806.0-2485487.6)/100
 #define MAP_HEIGHT 	2207		// one bin for 100m of map to be covered (1295931.0-1075275.4)/100
-#define BIN_SIZE	1000
+#define BIN_SIZE	100
 
 // picture parameters
 #define PIC_WIDTH 	640
 #define PIC_HEIGHT 	480
 
-#define LOW_PASS_X  40
-#define LOW_PASS_Y	40
+#define LOW_PASS_X  5
+#define LOW_PASS_Y	5
 
 #define ALPHA 		200
 

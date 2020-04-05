@@ -35,8 +35,7 @@ namespace ABM
 	void create_heatmap(int* infection_map, std::string name){
 
 		std::cout << "starting write of " << name << std::endl;
-		std::cout << infection_map[(1000*MAP_HEIGHT +1000)*4 + 2] << std::endl;
-		;
+
 		// create array in the right size of the picutre
 		int x_step = MAP_WIDTH/PIC_WIDTH+1;
 		int y_step = MAP_HEIGHT/PIC_HEIGHT+1;
@@ -98,7 +97,7 @@ namespace ABM
 						(float) heat_map2[(column*PIC_HEIGHT + row)*4 + 2],
 						(float) heat_map2[(column*PIC_HEIGHT + row)*4 + 3]);
 				png::rgba_pixel pixel = png::rgba_pixel(red,green,blue,ALPHA);
-				heat_map_png.set_pixel(column,row,pixel);
+				heat_map_png.set_pixel(column,PIC_HEIGHT-1-row,pixel);
 			}
 		}
 
@@ -145,61 +144,6 @@ namespace ABM
 	
     	for(Agent agent_iter :  population.Agents){
 			
-    		// get Workplace and Household ids
-    		index_t house_m = households[agent_iter.Household].Municipality;
-    		index_t workp_m = workplaces[agent_iter.Workplace].Municipality;
-
-    		// get coordinates for map to access
-			
-			std::pair<double,double> house_coord(municipalities[map[house_m]].Coordinates);
-			std::pair<double,double> workp_coord = municipalities[map[workp_m]].Coordinates;
-
-			index_t kanton_id = municipalities[house_m].KId;
-
-			// get to array indexes
-			//std::cout << "house_coord.first " << house_coord.first << std::endl;
-			//int house_x_coord = std::round(house_coord.first - LL_X)/BIN_SIZE;
-			//int house_y_coord = std::round(house_coord.second - LL_X)/BIN_SIZE;
-			//int workp_x_coord = std::round(workp_coord.first - LL_X)/BIN_SIZE;
-			//int workp_y_coord = std::round(workp_coord.second - LL_Y)/BIN_SIZE;
-
-			if(house_coord.first < 0.1){
-				std::cout << "house_coord.first " << house_coord.first << std::endl;
-				continue;
-			}
-			if(house_coord.first < 0.1){
-				std::cout << "house_coord.second " << house_coord.second << std::endl;
-				continue;
-			}
-			if(house_coord.first < 0.1){
-				std::cout << "workp_coord.first " << workp_coord.first << std::endl;
-				continue;
-			}
-			if(house_coord.first < 0.1){
-				std::cout << "workp_coord.second " <<workp_coord.second << std::endl;
-				continue;
-			}
-
-			int house_x_coord = 1000;
-			int house_y_coord = 1000;
-			int workp_x_coord = 1000;
-			int workp_y_coord = 1000;
-
-			if(house_x_coord < 0 || house_x_coord > MAP_WIDTH){
-				std::cout << "house_x_coord " << house_x_coord << std::endl;
-			}
-			if(house_y_coord < 0 || house_y_coord > MAP_HEIGHT){
-				std::cout << "house_y_coord " << house_y_coord << std::endl;
-			}
-			if(workp_x_coord < 0 || workp_x_coord > MAP_WIDTH){
-				std::cout << "workp_x_coord " << workp_x_coord << std::endl;
-			}
-			if(workp_y_coord < 0 || workp_y_coord > MAP_HEIGHT){
-				std::cout << "workp_y_coord " << workp_y_coord << std::endl;
-			}
-
-			
-
 			// find health
 			int health;
 			switch(agent_iter.Health){
@@ -209,19 +153,38 @@ namespace ABM
 				case Recovered 		: health = 3; break;
 			}
 
-			// TODO delete
-			health = 2;
+			if(health == 2){
+				std::cout << "someone is sick" << std::endl;
+			}
 
-			// increment canton counters
-			kantons[kanton_id*4 + health] += 1;
+    		// get Workplace and Household ids
+    		index_t house_m = households[agent_iter.Household].Municipality;
+    		index_t workp_m = workplaces[agent_iter.Workplace].Municipality;
 
-			// increment all maps
+
+    		// get coordinates for map to access
+
+			std::pair<double,double> house_coord(municipalities[map[house_m]].Coordinates);
+			int house_x_coord = std::round(house_coord.first - LL_X)/BIN_SIZE;
+			int house_y_coord = std::round(house_coord.second - LL_Y)/BIN_SIZE;
+			// increment maps
 			household_map[4*(house_x_coord*MAP_HEIGHT + house_y_coord) + health] += 1;
-			workplace_map[4*(workp_x_coord*MAP_HEIGHT + workp_y_coord) + health] += 1;
 			switch(agent_iter.Age){
 				case Minor 	: young_map[4*(house_x_coord*MAP_HEIGHT + house_y_coord) + health] += 1; break;
 				case Adult 	: middle_map[4*(house_x_coord*MAP_HEIGHT + house_y_coord) + health] += 1; break;
 				case Old 	: old_map[4*(house_x_coord*MAP_HEIGHT + house_y_coord) + health] += 1; break;
+
+			if(workp_m != ~0){
+				std::pair<double,double> workp_coord(municipalities[map[workp_m]].Coordinates);
+				int workp_x_coord = std::round(workp_coord.first - LL_X)/BIN_SIZE;
+				int workp_y_coord = std::round(workp_coord.second - LL_Y)/BIN_SIZE;
+				workplace_map[4*(workp_x_coord*MAP_HEIGHT + workp_y_coord) + health] += 1;
+			}
+
+			// increment canton counters
+			index_t kanton_id = municipalities[map[house_m]].KId;
+			kantons[kanton_id*4 + health] += 1;
+
 			}
 			
     	}
