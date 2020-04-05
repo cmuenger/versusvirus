@@ -43,7 +43,7 @@ namespace ABM
             for(auto i : modes)
             {
                 p.push_back(N);
-                N+=modes[i];
+                N+=i;
             }
             
             for(auto i : p)

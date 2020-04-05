@@ -101,15 +101,18 @@ namespace ABM
             if(itp == pop.end())
             {
                 std::cerr<<"Pop data not found"<<std::endl;
+                continue;
             }
            
-            multimodal_distribution multimodal_adult({(index_t)std::round(itp->pMiddle*itp->NPeople), (index_t)std::round(itp->pOld)});
-            multimodal_distribution multimodal_age({(index_t)std::round(itp->pYoung*itp->NPeople),(index_t)std::round(itp->pMiddle*itp->NPeople), (index_t)std::round(itp->pOld)});
+
+            multimodal_distribution multimodal_adult({(index_t)std::round(itp->pMiddle*itp->NPeople/100), (index_t)std::round(itp->pOld*itp->NPeople/100)});
+            multimodal_distribution multimodal_age({(index_t)std::round(itp->pYoung*itp->NPeople/100),(index_t)std::round(itp->pMiddle*itp->NPeople/100), (index_t)std::round(itp->pOld)});
             
             const auto& it = std::find_if(house.begin(), house.end(),[&](const auto& val){ return val.BfsId == m.BfsId; }  );
             if(it == house.end())
             {
                 std::cerr<<"House data not found"<<std::endl;
+                continue;
             }
 
             auto getAdultAge =[&] () {
@@ -135,7 +138,7 @@ namespace ABM
             {
                 //Setup household
                 Household h;
-                countHousehold++;
+           
                 h.Municipality = m.BfsId;
                 Households.push_back(h);
 
@@ -147,6 +150,8 @@ namespace ABM
                 a.Age = getAdultAge();
 
                 Agents.push_back(a);
+
+                countHousehold++;
             }
 
             //Create Double Households
@@ -154,7 +159,6 @@ namespace ABM
             {
                 //Setup household
                 Household h;
-                countHousehold++;
                 h.Municipality = m.BfsId;
                 Households.push_back(h);
 
@@ -175,6 +179,8 @@ namespace ABM
                     a.Age = getAge();
                     Agents.push_back(a);
                 }
+
+                 countHousehold++;
             }
 
 
@@ -183,7 +189,7 @@ namespace ABM
             {
                 //Setup household
                 Household h;
-                countHousehold++;
+              
                 h.Municipality = m.BfsId;
                 Households.push_back(h);
 
@@ -204,14 +210,15 @@ namespace ABM
                     a.Age = getAge();
                     Agents.push_back(a);
                 }
+
+                  countHousehold++;
             }
 
             //Create Quadruple Households
-            for(int i=0; i< it->P1; i++)
+            for(int i=0; i< it->P4; i++)
             {
                 //Setup household
                 Household h;
-                countHousehold++;
                 h.Municipality = m.BfsId;
                 Households.push_back(h);
 
@@ -234,15 +241,16 @@ namespace ABM
 
                     Agents.push_back(a);
                 }
+
+                countHousehold++;
             }
 
 
              //Create Quintett Households
-            for(int i=0; i< it->P1; i++)
+            for(int i=0; i< it->P5; i++)
             {
                 //Setup household
                 Household h;
-                countHousehold++;
                 h.Municipality = m.BfsId;
                 Households.push_back(h);
 
@@ -265,14 +273,14 @@ namespace ABM
 
                     Agents.push_back(a);
                 } 
+                countHousehold++;
             }
 
             //Create Sextett Households
-            for(int i=0; i< it->P1; i++)
+            for(int i=0; i< it->P6; i++)
             {
                 //Setup household
                 Household h;
-                countHousehold++;
                 h.Municipality = m.BfsId;
                 Households.push_back(h);
 
@@ -295,8 +303,11 @@ namespace ABM
 
                     Agents.push_back(a);
                 }
+                 countHousehold++;
             }
         }
+
+        std::cout<<countHousehold<<" Households created"<<std::endl;
     }
 
     void Population::createWorkplaces()
