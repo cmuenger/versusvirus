@@ -94,10 +94,11 @@ namespace ABM
             }
             else
             {
-                m.Coordinates = it->Coordinates;
+                m.Coordinates.first = it->Coordinates.first;
+                m.Coordinates.second = it->Coordinates.second;
                 m.Name = it->Name;
 
-                std::cout<<it->Coordinates.first<<" "<<it->Coordinates.second<<std::endl;
+                
             }
             
            

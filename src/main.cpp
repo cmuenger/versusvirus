@@ -115,7 +115,11 @@ int main(int argc, char** argv)
 
     std::cout<<n<<" "<<work_class[0]<<" "<<work_class[1]<<" "<<work_class[2]<<" "<<work_class[3]<<std::endl;
     
-    
+    for(const auto& m : p.Municipalities)
+    {
+        std::cout<< m.Coordinates.first<<" "<<m.Coordinates.second<<std::endl;
+    }
+    /*
     Parameters parameters;
 
     std::cout << "starting distance initialisation..." << std::endl;
@@ -168,5 +172,5 @@ int main(int argc, char** argv)
         // export population for output? <-------------------------
         vizualize(p, t);
     }
-
+    */
 };
