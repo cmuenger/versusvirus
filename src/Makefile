@@ -2,7 +2,7 @@ all: simulation
 
 COMPFLAGS = -std=c++17 -O3
 COMP = g++
-LIBS = `libpng-config --ldflags` -lstdc++fs
+LIBS = -lstdc++fs `libpng-config --ldflags`
 
 util.o: util.hpp util.cpp
 	${COMP} ${COMPFLAGS} util.cpp -c
@@ -17,10 +17,7 @@ simulation.o: simulation.hpp simulation.cpp
 	${COMP} ${COMPFLAGS} simulation.cpp -c
 
 postprocess.o: postprocess.hpp postprocess.cpp
-	${COMP} ${COMPFLAGS}  postprocess.cpp -c
-
-postprocess.o: postprocess.hpp postprocess.cpp
-	g++ --std=c++17 -O3 postprocess.cpp -c `libpng-config --ldflags` -lstdc++fs
+	${COMP} ${COMPFLAGS} postprocess.cpp -c
 
 main.o: main.cpp
 	g++ ${COMPFLAGS} main.cpp -c
@@ -30,7 +27,7 @@ clean:
 	rm -f simulation
 
 simulation: clean util.o entities.o parameters.o simulation.o postprocess.o main.o
-	g++ ${COMPFLAGS} ${LIBS} util.o entities.o parameters.o simulation.o postprocess.o main.o -o simulation 
+	g++ ${COMPFLAGS} util.o entities.o parameters.o simulation.o postprocess.o main.o -o simulation ${LIBS}
 
 
 testit: util.o entities.o parameters.o simulation.o  main.o
