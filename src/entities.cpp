@@ -33,21 +33,34 @@ namespace ABM
         return Health == HealthCat::Infected? 1. : 0.;
     }
 
-    void Population::setupDistanceWeights()
+    void Population::setupDistanceWeights(std::vector<Municipality>& municipalities, const Parameters& parameters)
     {
-        // for(size_t aIdx = 0; aIdx < Agents.size(); aIdx++)
-        // {
-        //     const Municipality& ahh = Households[Agents[aIdx].Household];
-        //     const Workplace& awp = Workplaces[Agents[aIdx].Workplace];
+        std::vector<std::tuple<size_t, size_t, double>> triples = std::vector<std::tuple<size_t, size_t, double>>();
+        for(size_t aIdx = 0; aIdx < Agents.size(); aIdx++)
+        {
+            const Municipality& ahh = municipalities[Households[Agents[aIdx].Household].Municipality];
+            const Municipality& awp = municipalities[Workplaces[Agents[aIdx].Workplace].Municipality];
+            
+            for(size_t bIdx = 0; bIdx < Agents.size(); bIdx++)
+            {     
+                const Municipality& bhh = municipalities[Households[Agents[bIdx].Household].Municipality];
+                const Municipality& bwp = municipalities[Workplaces[Agents[bIdx].Workplace].Municipality];
 
-        //     for(size_t bIdx = 0; bIdx < Agents.size(); bIdx++)
-        //     {     
-        //         const Household& bhh = Households[Agents[bIdx].Household];
-        //         const Workplace& bwp = Workplaces[Agents[bIdx].Workplace];
+                double dist1 = Dist(ahh.Coordinates, bhh.Coordinates, parameters.a_dist, parameters.b_dist);
+                double dist2 = Dist(ahh.Coordinates, bwp.Coordinates, parameters.a_dist, parameters.b_dist);
+                double dist3 = Dist(awp.Coordinates, bhh.Coordinates, parameters.a_dist, parameters.b_dist);
+                double dist4 = Dist(awp.Coordinates, bwp.Coordinates, parameters.a_dist, parameters.b_dist);
+                
+                double dist = std::min({dist1, dist2, dist3, dist4});
+                if (dist <= parameters.cutoff)
+                {
+                    triples.push_back( std::make_tuple(aIdx, bIdx, dist));
+                }
 
-        //         double dist1 = Dist(std::make_pair(Agents[aIdx].))
-        //     }
-        // }
+            }
+        }
+
+        DistanceWeights = SparseMatrix(triples);
     }
 
     std::vector<index_t> Population::GetAgentsOfHousehold(index_t hhIdx) const
