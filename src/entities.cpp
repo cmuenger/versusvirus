@@ -63,18 +63,22 @@ namespace ABM
         DistanceWeights = SparseMatrix(triples);
     }
 
-    void Population::createMunicipalities(std::vector<HelpPopulation> pop, std::vector<Commuter> com)
+    void Population::createMunicipalities(std::vector<HelpPopulation> pop, std::vector<Commuter> com, std::map<index_t, index_t> map)
     {
         for(const auto& p : pop)
         {
             Municipality m;
+            m.Id = map[p.BfsId];
             m.BfsId = p.BfsId;
-            m.NHouseholds = p.NHouseholds;
+            m.NPeople = p.NPeople;
             m.MaxWorker = p.NWorker;
             m.NWorker = 0;
             m.MaxWorkplaces = p.NWorkplaces;
             m.NWorkplaces = 0;
+            m.NHouseholds = 0;
             
+            
+            int countCommutes=0;
             //Add commutes
             for(const auto c : com)
             {
@@ -82,11 +86,13 @@ namespace ABM
                 {
                     if(c.WorkId != 7777)
                     {
-                        m.commutes_map.push_back(c.WorkId);
+                        m.commutes_map.push_back(map[c.WorkId]);
                         m.commutes.push_back(c.NCommuters);
+                        countCommutes++;
                     }
                 }
             }
+            m.Ncommutes = countCommutes;
 
             Municipalities.push_back(m);
         }
@@ -95,7 +101,7 @@ namespace ABM
     void Population::createHouseholds(std::vector<HelpPopulation> pop, std::vector<HelpHousehold> house)
     {
         index_t countHousehold=0;
-        for(const auto& m : Municipalities)
+        for(auto& m : Municipalities)
         {
             const auto& itp = std::find_if(pop.begin(), pop.end(),[&](const auto& val){ return val.BfsId == m.BfsId; }  );
             if(itp == pop.end())
@@ -111,9 +117,11 @@ namespace ABM
             const auto& it = std::find_if(house.begin(), house.end(),[&](const auto& val){ return val.BfsId == m.BfsId; }  );
             if(it == house.end())
             {
-                std::cerr<<"House data not found"<<std::endl;
+                std::cerr<<"House data "<<m.BfsId<<"not found"<<std::endl;
                 continue;
             }
+
+            m.NHouseholds = it->NHouseholds;
 
             auto getAdultAge =[&] () {
                 index_t cat = multimodal_adult.sample();
@@ -147,6 +155,7 @@ namespace ABM
                 a.Household = countHousehold;
                 a.Health = HealthCat::Susceptible;
                 a.HasSymptoms = false;
+                 a.Municipality = m.BfsId;
                 a.Age = getAdultAge();
 
                 Agents.push_back(a);
@@ -167,6 +176,7 @@ namespace ABM
                 a.Household = countHousehold;
                 a.Health = HealthCat::Susceptible;
                 a.HasSymptoms = false;
+                 a.Municipality = m.BfsId;
                 a.Age = getAdultAge();
                 Agents.push_back(a);
                 
@@ -176,6 +186,7 @@ namespace ABM
                     a.Household = countHousehold;
                     a.Health = HealthCat::Susceptible;
                     a.HasSymptoms = false;
+                     a.Municipality = m.BfsId;
                     a.Age = getAge();
                     Agents.push_back(a);
                 }
@@ -198,6 +209,7 @@ namespace ABM
                 a.Household = countHousehold;
                 a.Health = HealthCat::Susceptible;
                 a.HasSymptoms = false;
+                 a.Municipality = m.BfsId;
                 a.Age = getAdultAge();
                 Agents.push_back(a);
 
@@ -207,6 +219,7 @@ namespace ABM
                     a.Household = countHousehold;
                     a.Health = HealthCat::Susceptible;
                     a.HasSymptoms = false;
+                     a.Municipality = m.BfsId;
                     a.Age = getAge();
                     Agents.push_back(a);
                 }
@@ -227,6 +240,7 @@ namespace ABM
                 a.Household = countHousehold;
                 a.Health = HealthCat::Susceptible;
                 a.HasSymptoms = false;
+                 a.Municipality = m.BfsId;
                 a.Age = getAdultAge();
 
                 Agents.push_back(a);
@@ -237,6 +251,7 @@ namespace ABM
                     a.Household = countHousehold;
                     a.Health = HealthCat::Susceptible;
                     a.HasSymptoms = false;
+                     a.Municipality = m.BfsId;
                     a.Age = getAge();
 
                     Agents.push_back(a);
@@ -259,6 +274,7 @@ namespace ABM
                 a.Household = countHousehold;
                 a.Health = HealthCat::Susceptible;
                 a.HasSymptoms = false;
+                 a.Municipality = m.BfsId;
                 a.Age = getAdultAge();
 
                 Agents.push_back(a);
@@ -269,6 +285,7 @@ namespace ABM
                     a.Household = countHousehold;
                     a.Health = HealthCat::Susceptible;
                     a.HasSymptoms = false;
+                     a.Municipality = m.BfsId;
                     a.Age = getAge();
 
                     Agents.push_back(a);
@@ -289,6 +306,7 @@ namespace ABM
                 a.Household = countHousehold;
                 a.Health = HealthCat::Susceptible;
                 a.HasSymptoms = false;
+                a.Municipality = m.BfsId;
                 a.Age = getAdultAge();
 
                 Agents.push_back(a);
@@ -297,8 +315,10 @@ namespace ABM
                 {
                    Agent a;
                     a.Household = countHousehold;
+                    a.Workplace = ~0;
                     a.Health = HealthCat::Susceptible;
                     a.HasSymptoms = false;
+                     a.Municipality = m.BfsId;
                     a.Age = getAge();
 
                     Agents.push_back(a);
@@ -348,7 +368,7 @@ namespace ABM
                         Workplace w;
                         w.Municipality = m_idx; //Municipalities[m_idx].BfsId;
                         w.Size =  c==0 ? WorkCat::Global : (c==1 ? WorkCat::Large : (c==2 ? WorkCat::Medium : WorkCat::Small));
-
+                        w.MinWorker = company_min_size[c];
                         Workplaces.push_back(w);
 
                         Municipalities[m_idx].NWorker+=company_min_size[c];
@@ -381,49 +401,47 @@ namespace ABM
         //Loop over Municpaltiy. 
         for(const auto& m : Municipalities)
         {   
-            index_t a_idx;
+            if(m.commutes.size() == 0) continue;
             multimodal_distribution multimodal(m.commutes);
-            //Pick at random an household. 
-            while(true)
-            {
-                index_t h_idx = uniform.sample_int(0, m.NHouseholds);
-                //Pick at random an adult agent
-                a_idx = GetRandomAdultOfHousehold(h_idx);
-                //Check if he got allready a job
-                if(Agents[a_idx].Workplace != ~0)
-                {
-                    //Pick new household; 
-                    continue;
-                }
-                else
-                {
-                    break;
-                }
-            }
+            std::vector<index_t> workforce = GetWorkforceOfMunicipality(m.Id);
+            std::cout<<m.Id<<std::endl;
+            while(!workforce.empty())
+            {   
+                index_t a_idx = workforce.back();
+                workforce.pop_back();
+            
+        
+                //Pick a commute. Multimodal distribution of commutes by size
+                index_t c_idx = m.commutes_map[multimodal.sample()];        
+                    
+                //TODO sample cantons at random for unspecifed commutes
+                //std::cout<<c_idx<<std::endl;
+                //Get workplaces of Commute city
+                std::vector<index_t> w_indices = GetWorkplacesOfMunicipality(c_idx);
+                index_t W = w_indices.size();
 
-            //Pick a commute. Multimodal distribution of commutes by size
-            index_t c_idx = m.commutes_map[multimodal.sample()];        
                 
-            //TODO sample cantons at random for unspecifed commutes
-
-            //Get workplaces of Commute city
-            std::vector<index_t> w_indices = GetWorkplacesOfMunicipality(c_idx);
-            index_t W = m.NWorkplaces;
-            //Pick a workplace rejection sampling over distibution (upper bound for large companies 500); check if the still have open positions else reject
-            while(true)
-            {
-                 index_t w_idx = w_indices[uniform.sample_int(0, W)];
-
-                float p = uniform.sample();
-                //Accept
-                if(p <   (Workplaces[w_idx].MinWorker/1000) )//1000 Upper bound for large companies
+                //std::cout<<W<<" "<<w_indices.size()<<std::endl;
+                //Pick a workplace rejection sampling over distibution (upper bound for large companies 500); check if the still have open positions else reject
+                while(true)
                 {
-                  Agents[a_idx].Workplace = w_idx;
-                  Workplaces[w_idx].NWorker++;
-                  break;
+                    index_t w_idx = w_indices[uniform.sample_int(0, W)];
+
+                    float p = uniform.sample();
+                    //std::cout<<p<<" "<<Workplaces[w_idx].MinWorker/1000.0<<std::endl;
+                    //Accept
+                    if(p <   (Workplaces[w_idx].MinWorker/1000.0) )//1000 Upper bound for large companies
+                    {
+                    Agents[a_idx].Workplace = w_idx;
+                    Workplaces[w_idx].NWorker++;
+                    break;
+                    }
                 }
+
             }
         }
+
+        std::cout<<"Assigned Workers"<<std::endl;
         
     }
 
@@ -431,13 +449,16 @@ namespace ABM
     {
         AgentsOfHousehold.resize(Households.size());
         AgentsOfWorkplace.resize(Workplaces.size());
+        AgentsOfMunicipality.resize(Municipalities.size());
 
         for(int  i=0; i<Agents.size(); i++)
         {
             AgentsOfHousehold[map[Agents[i].Household]].push_back(i);
             AgentsOfWorkplace[map[Agents[i].Workplace]].push_back(i);
+            AgentsOfMunicipality[map[Agents[i].Municipality]].push_back(i);
         }
     }
+
 
     void Population::createLookUpTableForWorkplaces()
     {
@@ -452,6 +473,18 @@ namespace ABM
     std::vector<index_t> Population::GetWorkplacesOfMunicipality(index_t c_idx) const
     {
         return WorkplacesOfMunicipality[c_idx];
+    }
+
+    std::vector<index_t> Population::GetWorkforceOfMunicipality(index_t c_idx) const
+    {
+        
+        std::vector<index_t> workforce;
+        for(const auto& a : AgentsOfMunicipality[c_idx])
+        {
+            if(Agents[a].Age == AgeCat::Adult);
+                workforce.push_back(a);
+        }
+        return workforce;
     }
 
 
@@ -472,7 +505,7 @@ namespace ABM
 
         std::vector<index_t> adults;
         for(const auto idx : a)
-        {
+        {   
             if(Agents[idx].Age == AgeCat::Adult)
             {
                 adults.push_back(idx);
@@ -480,6 +513,10 @@ namespace ABM
         }
 
         uniform_distribution uniform;
-        return adults[uniform.sample_int(0, adults.size())];
+        if(adults.size()>0)
+            return adults[uniform.sample_int(0, adults.size())];
+        else
+            return ~0;
+        
     }
 }

@@ -12,7 +12,6 @@ using namespace ABM;
 int main(int argc, char** argv)
 {
     //TEST
-
     std::vector<HelpPopulation> pop;
     std::vector<Commuter> commuters;
     std::vector<HelpHousehold> households;
@@ -43,7 +42,7 @@ int main(int argc, char** argv)
 
     Population p;
 
-    p.createMunicipalities(pop,commuters);
+    p.createMunicipalities(pop,commuters,map);
 
     std::cout<<p.Municipalities.size()<<std::endl;
     int sum =0;
@@ -84,11 +83,16 @@ int main(int argc, char** argv)
                  <<std::get<0>(histo[i])<<" "
                   <<std::get<1>(histo[i])<<" "
                    <<std::get<2>(histo[i])<<" "
-                    <<std::get<3>(histo[i])<<std::endl;
-
+                    <<std::get<3>(histo[i])<<" "
+                    <<p.Municipalities[i].NWorkplaces<<std::endl;
     }
 
     p.createHouseholds(pop,households);
+
+    p.createLookUpTableForWorkplaces();
+    p.createLookUpTableForAgents(map);
+
+    p.assignAgentsToWorkplaces();
 
     // END TEST
 

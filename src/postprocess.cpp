@@ -1,6 +1,8 @@
 #include "postprocess.hpp"
 #include <iostream>
 #include <filesystem>
+#include <png++/image.hpp>
+#include <png++/rgba_pixel.hpp>
 
 namespace ABM
 {
@@ -9,6 +11,7 @@ namespace ABM
 
 		// ensure the directory existst
 		std::string dir = "day" + std::to_string(date);
+		std::string fname = dir + name;
 
 		if(!std::filesystem::exists(dir)){
 			std::filesystem::create_directory(dir);
@@ -32,9 +35,12 @@ namespace ABM
 					}
 				}
 				// low pass to get color everywhere
-				
+				//TODO
 			}
 		}
+
+		png::image heat_map_png = image<rgba_pixel>(PIC_WIDTH,PIC_HEIGHT);
+		heat_map_png.write(fname);
 
 		return;
 	}
