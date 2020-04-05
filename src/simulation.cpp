@@ -20,6 +20,7 @@ namespace ABM
         // update all lambdas
         for(index_t agentIdx = 0; agentIdx < population.Agents.size(); agentIdx++)
         {
+            std::cout << "At agent " << agentIdx << "/" << population.Agents.size() << std::endl;
             Agent agent = population.Agents[agentIdx];
             switch(agent.Health)
             {
@@ -67,6 +68,8 @@ namespace ABM
         double l = 0;
         const Agent agent = population.Agents[agentIdx];
 
+        return 0.5;
+
         // sum over all household members
         double tmp = 0.;
         for(index_t residentIdx : population.GetAgentsOfHousehold(population.Agents[agentIdx].Household))
@@ -77,7 +80,9 @@ namespace ABM
             tmp += resident.Get_I()*resident.Get_c(parameters.symptomaticPercentage)*parameters.beta_household;
         }
         const double nha = std::pow( population.GetAgentsOfHousehold(agent.Household).size(), parameters.alpha);
-        l += tmp/nha;
+        l += tmp/ ( nha <= 1e-14 ? 1. : nha);
+
+        std::cout << "     passed flatmates" << std::endl;
 
         // sum over all coworkers
         tmp = 0.;
@@ -90,7 +95,9 @@ namespace ABM
             tmp += coworker.Get_I()*coworker.Get_c(parameters.symptomaticPercentage)*parameters.beta_workplace*parameters.phi_workplace;
         }
         const double npj = population.GetAgentsOfWorkplace(agent.Workplace).size();
-        l += tmp/npj;
+        l += tmp/( npj <= 1e-14? 1. : npj);
+
+            std::cout << "     passed coworkers" << std::endl;
 
         // sum over random interactions -> step through entire row in sparse matrix
         tmp = 0;
@@ -105,7 +112,10 @@ namespace ABM
                         *population.DistanceWeights.Values[rndPersonIdx];
             normalizingConstant += population.DistanceWeights.Values[rndPersonIdx];
         }
-        l += tmp/normalizingConstant;
+
+        l += tmp/( normalizingConstant <= 1e-14 ? 1. : normalizingConstant);
+
+        std::cout << "     passed random socializing" << std::endl;
 
         return l;
     }
