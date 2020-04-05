@@ -1,9 +1,7 @@
+#pragma once
+
 #include <iostream>
 #include <vector>
-
-#include "entities.hpp"
-
-#pragma once
 
 namespace ABM
 {
@@ -24,6 +22,7 @@ namespace ABM
 
         double a_dist;
         double b_dist;
+        double cutoff;
 
         double latency_period;
         double infection_period;

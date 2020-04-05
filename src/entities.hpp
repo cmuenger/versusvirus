@@ -1,11 +1,13 @@
+#pragma once
+
 #include <cinttypes>
 #include <vector>
 #include <string>
 #include <random>
 
 #include "util.hpp"
+#include "parameters.hpp"
 
-#pragma once
 
 typedef size_t index_t;
 
@@ -98,7 +100,7 @@ namespace ABM
     {
         private:
 
-        void setupDistanceWeights();
+        void setupDistanceWeights(std::vector<Municipality>& municipalities, const Parameters& parameters);
 
         public:
         SparseMatrix DistanceWeights;
