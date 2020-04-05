@@ -113,7 +113,7 @@ namespace ABM
 	// Input: population, municipality vector indexed by BfsIds and int for date
 	// Side effect: creates a folder with date as name and containing all heat maps,
 	// and possibly a jason with further data to be desplayed on the website.
-    void vizualize(Population& population, int date){
+    void vizualize(Population& population, int date, std::map<index_t,index_t> map){
 
     	std::cout << "starting visualization of day " << date << std::endl;
 
@@ -142,16 +142,17 @@ namespace ABM
 
     	// fill all maps with the number of people
     	// go through all households and fill de general household map as well as all edges
-    	for(Agent agent_iter : agents){
+	
+    	for(Agent agent_iter :  population.Agents){
+			
     		// get Workplace and Household ids
     		index_t house_m = households[agent_iter.Household].Municipality;
     		index_t workp_m = workplaces[agent_iter.Workplace].Municipality;
 
     		// get coordinates for map to access
-    		// std::cout << municipalities[house_m].Coordinates.first << std::endl;
-			std::pair<double,double> house_coord = municipalities[house_m].Coordinates;
-			std::pair<double,double> workp_coord = municipalities[workp_m].Coordinates;
-			//std::cout << house_coord.first << std::endl;
+			
+			std::pair<double,double> house_coord(municipalities[map[house_m]].Coordinates);
+			std::pair<double,double> workp_coord = municipalities[map[workp_m]].Coordinates;
 
 			index_t kanton_id = municipalities[house_m].KId;
 

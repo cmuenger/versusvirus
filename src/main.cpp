@@ -172,7 +172,7 @@ int main(int argc, char** argv)
     {
         PerformTimeStep(p, parameters, bf);
         // export population for output? <-------------------------
-        vizualize(p, t);
+        vizualize(p, t,bfsIdToIdx_map);
     }
     
 };
