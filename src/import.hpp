@@ -57,16 +57,16 @@ std::vector<HelpCoordinates> importMunicipalies()
 
     for(std::vector<std::string> vec : dataList)
 	{
-        if(vec.size() < 6)
+        if(vec.size() < 4)
         {
             std::cerr<<"Municipality data to small!"<<std::endl;
             exit(-1);
         }
         HelpCoordinates town;
         
-        town.BfsId = std::stoi(vec[1]);
-        town.Name = vec[2];
-        town.Coordinates = std::make_pair(std::stod(vec[3]),std::stod(vec[4]));
+        town.BfsId = std::stoi(vec[0]);
+        town.Name = vec[1];
+        town.Coordinates = std::make_pair(std::stod(vec[2]),std::stod(vec[3]));
 
         municipality.push_back(town);
     }
