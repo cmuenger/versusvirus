@@ -167,8 +167,7 @@ int main(int argc, char** argv)
 
     Buffer bf = initBuffer(p, parameters.alpha);
 
-    //for(int t = 0; t < cli.getTimeHorizon(); t += cli.getTimeDelta())
-    for(int t = 0; t < 1; t ++)
+    for(int t = 0; t < cli.getTimeHorizon(); t += cli.getTimeDelta())
     {
         PerformTimeStep(p, parameters, bf);
         // export population for output? <-------------------------

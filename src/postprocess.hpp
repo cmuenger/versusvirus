@@ -17,11 +17,11 @@
 #define BIN_SIZE	100
 
 // picture parameters
-#define PIC_WIDTH 	640
-#define PIC_HEIGHT 	480
+#define PIC_WIDTH 	960
+#define PIC_HEIGHT 	720
 
-#define LOW_PASS_X  5
-#define LOW_PASS_Y	5
+#define LOW_PASS_X  2
+#define LOW_PASS_Y	2
 
 #define ALPHA 		200
 

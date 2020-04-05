@@ -23,8 +23,8 @@ namespace ABM
 		
 		// infected is red and recovered is blue
 		int red = std::round(255*((infected + 0.5*exposed)/total));
-		int green = std::round(255*((susceptible + 0.5*exposed)/total));
-		int blue = std::round(255*(recovered/total));
+		int green = std::round(128*((susceptible + 0.5*exposed)/total));
+		int blue = std::round(128*(recovered/total));
 		std::tuple<int,int,int> rgb = std::make_tuple(red,green,blue);
 		return rgb;
 	}
@@ -151,10 +151,6 @@ namespace ABM
 				case Exposed 		: health = 1; break;
 				case Infected 		: health = 2; break;
 				case Recovered 		: health = 3; break;
-			}
-
-			if(health == 2){
-				std::cout << "someone is sick" << std::endl;
 			}
 
     		// get Workplace and Household ids
