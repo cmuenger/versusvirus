@@ -18,5 +18,5 @@ namespace ABM
 
     Buffer initBuffer(const Population& pop, const double alpha);
     void PerformTimeStep(Population& pop, Parameters& prm, Buffer& bf);
-    double lambda(const index_t agentIdx, const Population& population, const Parameters& parameters);
+
 }
