@@ -28,7 +28,7 @@ namespace ABM
         HealthCat Health;
         bool HasSymptoms;
 
-        double Get_c(const double symptomaticCases) const;
+        double Get_c() const;
         double Get_I() const;
 
 

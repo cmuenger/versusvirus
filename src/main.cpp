@@ -153,10 +153,12 @@ int main(int argc, char** argv)
 
     parameters.dt = cli.getTimeDelta();
 
+    Buffer bf = initBuffer(p, parameters.alpha);
+
     //for(int t = 0; t < cli.getTimeHorizon(); t += cli.getTimeDelta())
     for(int t = 0; t < 1; t ++)
     {
-        PerformTimeStep(p, parameters);
+        PerformTimeStep(p, parameters, bf);
         // export population for output? <-------------------------
         vizualize(p, t);
     }

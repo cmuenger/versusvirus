@@ -16,7 +16,7 @@ namespace ABM
 
 
 
-    double Agent::Get_c(const double symptomaticCases) const
+    double Agent::Get_c() const
     {
         if (Health == HealthCat::Infected && HasSymptoms) return 2.;
         // if (Health == HealthCat::Infected)
