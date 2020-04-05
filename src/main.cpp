@@ -3,7 +3,7 @@
 #include "parameters.hpp"
 #include "entities.hpp"
 #include "simulation.hpp"
-//#include "postprocess.hpp"
+#include "postprocess.hpp"
 #include "import.hpp"
 #include "util.hpp"
 
@@ -151,6 +151,7 @@ int main(int argc, char** argv)
     {
         PerformTimeStep(population, parameters);
         // export population for output? <-------------------------
+        vizualize(p, t);
     }
 
 };

@@ -23,7 +23,7 @@ clean:
 	rm -f simulation
 
 simulation_single: main.cpp entities.hpp entities.cpp parameters.hpp parameters.cpp simulation.hpp simulation.cpp postprocess.hpp postprocess.cpp import.hpp util.hpp util.cpp
-	g++ --std=c++17 -O3 util.cpp entities.cpp parameters.cpp simulation.cpp main.cpp -o simulation
+	g++ --std=c++17 -O3 util.cpp entities.cpp parameters.cpp simulation.cpp postprocess.cpp main.cpp -o simulation
 
 
 debug: main.cpp entities.hpp entities.cpp parameters.hpp parameters.cpp simulation.hpp simulation.cpp postprocess.hpp postprocess.cpp import.hpp
