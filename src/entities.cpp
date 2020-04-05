@@ -90,6 +90,7 @@ namespace ABM
             if(it == coord.end())
             {
                 std::cerr<<"Coordinate missing ("<<m.BfsId<<")"<<std::endl;
+                m.Coordinates = std::make_pair(0,0);
             }
             else
             {
