@@ -11,6 +11,9 @@ using namespace ABM;
 
 int main(int argc, char** argv)
 {
+
+    CommandLineInterface cli(argc, argv);
+    cli.ParseArgs();
     // -------------------------------------------------------
     // perform initialisation
 
@@ -119,6 +122,18 @@ int main(int argc, char** argv)
     p.setupDistanceWeights(p.Municipalities, bfsIdToIdx_map, parameters);
     std::cout << "  -- passed" << std::endl;
 
+    // make patient zero
+    {
+        std::random_device dev;
+        std::mt19937 rng(dev());
+        std::uniform_int_distribution<> dis(0, p.Agents.size());
+        for(int i = 0; i < cli.getPatientZeros(); i++)
+        {
+            size_t idx = dis(rng);
+            p.Agents[idx].Health = HealthCat::Exposed;
+        }
+    }
+
     // END TEST
 
     //---------------------------
@@ -140,8 +155,7 @@ int main(int argc, char** argv)
     //   - prep output for web-app
     //   - profit    
 
-    CommandLineInterface cli(argc, argv);
-    cli.ParseArgs();
+    
 
     parameters.dt = cli.getTimeDelta();
 

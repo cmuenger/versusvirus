@@ -82,7 +82,7 @@ namespace ABM
         const double nha = std::pow( population.GetAgentsOfHousehold(agent.Household).size(), parameters.alpha);
         l += tmp/ ( nha <= 1e-14 ? 1. : nha);
 
-        std::cout << "     passed flatmates" << std::endl;
+        //std::cout << "     passed flatmates" << std::endl;
 
         // sum over all coworkers
         tmp = 0.;
@@ -97,7 +97,7 @@ namespace ABM
         const double npj = population.GetAgentsOfWorkplace(agent.Workplace).size();
         l += tmp/( npj <= 1e-14? 1. : npj);
 
-            std::cout << "     passed coworkers" << std::endl;
+            //std::cout << "     passed coworkers" << std::endl;
 
         // sum over random interactions -> step through entire row in sparse matrix
         tmp = 0;
@@ -115,7 +115,7 @@ namespace ABM
 
         l += tmp/( normalizingConstant <= 1e-14 ? 1. : normalizingConstant);
 
-        std::cout << "     passed random socializing" << std::endl;
+        //std::cout << "     passed random socializing" << std::endl;
 
         return l;
     }

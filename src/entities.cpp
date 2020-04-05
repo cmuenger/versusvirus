@@ -65,7 +65,7 @@ namespace ABM
         //     }
         // }
 
-        DistanceWeights = SparseMatrix(triples);
+        DistanceWeights = SparseMatrix(triples, Agents.size());
     }
 
     void Population::createMunicipalities(std::vector<HelpPopulation> pop, std::vector<Commuter> com, std::vector<HelpCoordinates> coord, std::map<index_t, index_t> map)
