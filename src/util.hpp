@@ -42,8 +42,9 @@ namespace ABM
         {
             for(auto i : modes)
             {
-                p.push_back(N);
                 N+=i;
+                p.push_back(N);
+                
             }
             
             for(auto i : p)
