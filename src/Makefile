@@ -25,16 +25,18 @@ postprocess.o: postprocess.hpp postprocess.cpp
 main.o: main.cpp
 	g++ ${COMPFLAGS} main.cpp -c
 
-simulation: util.o entities.o parameters.o simulation.o postprocess.o main.o
+clean:
+	rm -f *.o
+	rm -f simulation
+
+simulation: clean util.o entities.o parameters.o simulation.o postprocess.o main.o
 	g++ ${COMPFLAGS} ${LIBS} util.o entities.o parameters.o simulation.o postprocess.o main.o -o simulation 
 
 
 testit: util.o entities.o parameters.o simulation.o  main.o
 	g++ ${COMPFLAGS} util.o entities.o parameters.o simulation.o main.o -o simulation
 
-clean:
-	rm -f *.o
-	rm -f simulation
+
 
 simulation_single: main.cpp entities.hpp entities.cpp parameters.hpp parameters.cpp simulation.hpp simulation.cpp postprocess.hpp postprocess.cpp import.hpp util.hpp util.cpp
 	g++ --std=c++17 -O3 util.cpp entities.cpp parameters.cpp simulation.cpp postprocess.cpp main.cpp -o simulation
