@@ -1,0 +1,163 @@
+\documentclass[]{scrartcl}
+
+\RequirePackage[intlimits]{amsmath}
+\RequirePackage{amsfonts,amssymb,amscd,amsthm,xspace}
+
+\usepackage[centerlast,small,sc]{caption}
+\setlength{\captionmargin}{20pt}
+
+\usepackage[square, numbers, comma, sort&compress]{natbib} 
+\usepackage{verbatim} 
+\usepackage{graphbox}
+\usepackage{vector}  
+\usepackage{wasysym}
+\usepackage[ruled]{algorithm2e}
+\usepackage{enumerate}
+\usepackage{mathtools}
+\usepackage{hyperref}
+%opening
+\title{COVID-Predictor}
+\subtitle{Derivation and Extension of the Population Model}
+\author{Robin Kramer, Tom Kuchler, Lorin M{\"u}hlebach, \\Cedric M{\"u}nger, Mar{\'i}a Ruiz
+	Martínez, Yannick Schaffner, \\Dominik Schulte, Kamil Sklodowski
+}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\veps}{\epsilon}
+\newcommand{\vphi}{\varphi}
+\newcommand{\rnd}[1]{\mathsf{#1} }
+\input{commands.tex}%Contains most usefull commands
+\begin{document}
+
+\maketitle
+
+%\begin{abstract}
+%
+%\end{abstract}
+
+\section{Generating Households, Implementation Versus-Virus}
+Goal: get the age distribution of the household members $\prb{\rnd A_1,...,\rnd A_{\rnd S},\rnd T}$
+which largely determines the infection rate within household. Assumptions about the natural interaction \footnote{e.g. family vs. roommates} and occupation \footnote{Influence of infections imported from outside} of the household members has an important impact on how the disease spreads.
+The method to create natural households by Ajelli et Al. can be summarized as follows:
+
+\begin{align}
+  \prb{\rnd T}{}: &\text{Prb of Houshold type }\\
+  \prbCond{\rnd S}{\rnd T}{}{}: & \text{Prb of Houshold size given Type}\\
+  \prbCond{\rnd C}{\rnd T,\rnd S}:  & \text{Prb of Houshold Head Age class, }\\
+  &\text{Is an intermediate step from data-availablility on age in houshold}\notag\\
+  \prbCond{\rnd A_1}{\rnd C}: & \text{Prb of Houshold head age}\\
+  \prbCond{\rnd A_2,...,\rnd A_s}{s=S}: &\text{Prb of age of other houshold members}
+\end{align}
+
+The available data for Italy does however not have a one-to-one  correspondence to Switzerland. 
+Thanks to the swiss Federal Statistical Office, a wide variety of relevant data is available:
+\begin{itemize}
+	\item Number of persons of age $x$ per municipality
+	\\ \url{https://www.bfs.admin.ch/bfs/de/home/statistiken/bevoelkerung/stand-entwicklung/bevoelkerung.assetdetail.9635941.html}
+	\item Number of households with $n$ members $n\in \{1,2,...,5,6+\}$ per municipality\\ \url{https://www.bfs.admin.ch/bfs/de/home/statistiken/bevoelkerung/stand-entwicklung/haushalte.assetdetail.9787080.html}
+	\item Prevalence of different forms of households (Familienbericht G2.1)
+	\item Household type per person and per household (Familienbericht G2.2)
+	\item Parent-childern households, per age of youngest child (over/under 25) and number of parents (Familienbericht G2.3)
+	\item Proportion of parents in same household according to age categories 0-3, 4-12,13-17,18-14 (Familienbericht G2.4)
+	\item Distribution of number of children below 25 in household (Familienbericht G2.8)
+	\item Distribution of age difference in couples living in same household (Familienbericht G3.2)
+\end{itemize}
+The "Familienbericht" is available under \url{https://www.bfs.admin.ch/bfs/de/home/statistiken/kataloge-datenbanken/publikationen.assetdetail.2347880.html} and the relevant datasets can be found in the "Anhang".
+From this, we propose the following algorithm for generating realistic population and household data:
+
+
+\subsection{Used Approximation}
+From the available data for Switzerland we decided to use for version 0.1
+\begin{itemize}
+	\item the distribution of person/household per municipality,
+	\item the age distribution per municipality.
+\end{itemize}
+Then we divided the citizens in the three age-classes 0-18, 18-65, 65+ and proceeded as follows:
+\begin{enumerate}
+	\item generate per municipality the correct number of households w. occupants 
+		(1,2,3,4,5,6+) members)
+	\item assign first member according to local age distribution for 18+
+	\item assign rest of members according to the resulting marginal distribution after excluding the first member
+	(6+ households get only 6 members assigned)
+\end{enumerate}
+	
+\section{Proposed Algorithmic Refinements}
+	In order to refine the approach developed and implemented during VersusVirus, we can propose some improvements, starting with increasing the variety of age categories.
+	A reasonable granularity of the age categories, considering the different natural behaviour of each age group, different effects by quarantine measures, and available data is shown in table \ref{tab:Age}.
+	\begin{table}
+		\centering
+		\begin{tabular}{c| c r}
+			Cat&Age&Likeli Occupation\\
+			\hline
+			A& 0-5 & Preschool \\
+			B&6-17 & School/Apprenticeship \\
+			C&18-24 & Working\footnote{incl. apprenticeship}/Student  \\
+			D&25-49 & Working\\
+			E&50-65 & Working\\
+			F&65+ &retired, high risk
+		\end{tabular}
+		\caption{Proposed classification based on age.}
+		\label{tab:Age}
+	\end{table}
+	\begin{table}
+		\centering
+		\begin{tabular}{c|r r}
+			cat&\#Pers&Constraints
+			\\
+			\hline
+			I&1&adult\\
+			II-C&2&Couple\\
+			II-P&2&Parent-Child\\
+			III-C&3&Couple. 1 Child\\
+			III-P&3&Single, 2 Children\\
+			IV-C&4&Couple, 2 Children\\
+			IV-A&4&All adults\\
+			V-C&5&Couple, 3 children\\
+			V-A&5&All adults\\
+			VI&6+&All adults
+		\end{tabular}
+		\caption{Proposed simplified household categories}
+		\label{tab:HH}
+	\end{table}
+	Some possible categories are not proposed due to the low prevalence to simplify the household generation.
+	The constraints within each household are as follows:
+	\begin{itemize}
+		\item Adults are in age categories C-F
+		\item Children are in age categories A-C
+		\item Couples constitute of adults, differing at most by 12 years
+		\item Parents and children in the same household have an age-difference between 18 and 40 years
+		\item thus adults in household-types\footnote{except II-C} x-C, x-P are in age categories C-E
+	\end{itemize}
+	
+	\subsection{Generating the Households}
+	\begin{enumerate}
+		\item generate municipality households with correct distribution of member numbers categories
+		 \item calculate the ratio $\frac{\text{II-P}}{\text{II-C}}$ and assign households w. 2 members accordingly.
+		 \begin{itemize}
+		 \item[II-P] single parents living with children: $4.3\%$ of all households, around $61\%$ of all single parents live with one child. 
+		\item[II-C]
+		 around $25\%$ of all households constitute couples w/o kids
+		\end{itemize}
+		\item in the same fashion, calculate the split for the household types III-X, IV-X, V-X	
+	\end{enumerate}
+	\subsection{Populating the Households}
+	\begin{enumerate}	
+		\item generate population according to municipal age distribution
+		\item assign\footnote{assignments happen uniform at random from the unassigned population meeting the criteria. This corresponds to the empirical conditional distribution} for each household of categories II-P, III-P, III-C, IV-P, V-P one adult in age group C-E
+		\item assign for III-C, IV-C households spouse meeting the age-constraints
+		\item assign correct number of children meeting the age constraints
+		\item Form valid couples for category $II-P$
+		\item Assign I to remaining adults
+		\item Assign households of type VI one adult each
+		\item Fill up the households of type VI as good as possible
+	\end{enumerate}
+	
+	\subsection{Constraints Violations}
+	The proposed algorithm does not guarantee that all constraints can be met. In particular, the population data is per municipality, but the data on different household forms are country-wide averages. Possible solutions for violations are:
+	\begin{itemize}
+		\item Try again with different RNG-seed
+		\item Implement optimization algorithm
+		\item take agent of closest fit instead
+		\item Generate new random agent according to population distribution 
+	\end{itemize}
+
+\end{document}

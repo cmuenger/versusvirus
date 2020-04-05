@@ -1,0 +1,289 @@
+%----------------------------------------------
+%Commands Robin
+%----------------------------------------------
+\RequirePackage{bm}
+\RequirePackage{bbm}
+\RequirePackage{mathrsfs}
+\RequirePackage{commath}
+
+\makeatletter 
+\def \moverlay{\mathpalette \mov@rlay}
+\def \mov@rlay#1#2{\leavevmode\vtop{
+		\baselineskip \z@skip \lineskiplimit - \maxdimen
+		\ialign{\hfil$\m@th#1##$\hfil\cr#2\cr\cr}
+}}
+\newcommand{\charfusion}[3][\mathord]{
+	#1{\ifx#1\mathop\vphantom{#2}\fi
+		\mathpalette\mov@rlay{#2\cr#3}
+	}
+	\ifx#1 \mathop \expandafter \displaylimits\fi }
+\makeatother
+%\newcommand{\cupdot}{\mathbin{\mathaccent \cup \cdot }}
+\newcommand{\cupdot}{\charfusion[\mathbin]{\cup}{\cdot}}
+\newcommand{\bigcupdot}{\charfusion[\mathop]{\bigcup}{\cdot}}
+
+
+
+\newcommand{\Def}{\textbf{Def: }}
+\newcommand{\Prop}{\textbf{Prop: }}
+\newcommand{\Thm}{\textbf{Theorem: }}
+\newcommand{\Prf}{\textbf{Proof: }}
+
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\scd}{scd} %set of all common divisors
+
+\newcommand{\R}{\bbR} %reals
+%\newcommand{\C}{\bbC} %Complex
+\newcommand{\Z}{\bbZ} %integers
+\newcommand{\N}{\bbN} %positive integers
+\newcommand{\Q}{\bbQ} %Fractional numbers
+\newcommand{\LL}{\bbL} %linear Operator
+\newcommand{\horbar}{\text{---} } %usefull for matrix of rowvectors 
+
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+%------------------------
+%Vectorspaces and Sets
+%------------------------
+\newcommand{\sprod}[2]{\ensuremath{ \left\langle #1, \, #2 \right\rangle} } %Scalar product
+%\newcommand{\abs}[1]{\ensuremath{\left|#1\right| }}
+%\newcommand{\norm}[1]{\ensuremath{\left\Vert #1 \right\Vert}} %the norm
+\newcommand{\normL}[2]{\ensuremath{ \norm{#2}_{#1} }} %Specific Norm
+\newcommand{\dist}[3][]{
+	\ifthenelse
+	{\isempty{#2} \AND \isempty{#3}}%Both Args Empty
+	{
+		\ifthenelse
+			{\isempty{#1}}
+			{\rho} 
+			{\rho_{#1}}
+	}
+	{
+		\ifthenelse
+		{\isempty{#2} \OR \isempty{#3} }
+		{\PackageError{Usage of dist}{One nonempty arguement detected} } %One Arg nonempty
+		{ %Both Args Nonempty
+			\ifthenelse
+			{\isempty{#1}}
+			{\rho(#2,#3)} 
+			{\rho_{#1}(#2,#3)}
+		}
+	}
+}
+\newcommand{\bigSet}[2]{\ensuremath{ \left\{ {#1}_k \right\}_{k \in #2} } }%Set with indexed elements
+
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\esssup}{ess\,sup}
+\DeclareMathOperator*{\essinf}{ess\,inf}
+\RequirePackage{bbm}
+\newcommand{\indicFkt}[2]{\ensuremath{ \mathbbm{1}_{#1}\left(#2\right) }}
+\newcommand{\indicSet}[1]{\ensuremath{ \mathbbm{1}_{\left\{ #1 \right\}} }}
+
+\newcommand{\almostE}{\text{-a.e. }}
+\newcommand{\almostA}{\text{-a.a. }}
+\newcommand{\almostS}{\text{-a.s. }}
+\newcommand{\singular}{\bot}
+
+\DeclareMathOperator{\diam}{diam}
+\newcommand{\closure}[1]{\mathrm{cl}\del{#1}}
+
+\DeclareMathOperator{\identity}{I}
+\newcommand{\ident}[1]{\identity_{#1}}
+\newcommand{\ones}{\ensurevect{1}{}}
+
+\DeclareMathOperator{\supp}{supp} %Support set
+
+\RequirePackage{xifthen}
+\RequirePackage{bm}
+\newcommand{\ensurevect}[2]{ %Makes the vector boldfaced if no indices is given (second Arg empty)
+	\ensuremath{ 
+		\ifthenelse{\isempty{#2} \or \equal{#2}{,}} %or part due to bad implementation necessary, 
+		%should have used optional arguments \cmd[optArg] from the beginning
+		{\bm{#1} }
+		{#1_{#2} }
+	}
+}
+
+\newcommand{\condSet}[2]{\ensuremath{\left\{#1\vphantom{#2}\right|\left. \vphantom{#1}#2 \right\} }}
+\newcommand{\compl}[1]{{#1}^{\mathsf{c}}}
+
+%Transpose symbol with and w/o brackets
+\newcommand{\trps}[1]{\ensuremath{ #1^{\mathsf{T}} }}
+\newcommand{\trpsbr}[1]{ \trps{\left(#1 \right)} }
+\newcommand{\hermtr}[1]{\ensuremath{ #1^{\mathsf{H}} }}
+\newcommand{\hermtrbr}[1]{ \hermtr{\left(#1 \right)} }
+
+
+%-----------------
+% Arrows
+% ---------------
+\newcommand{\larr}{\ensuremath{\leftarrow}}
+\newcommand{\Larr}{\ensuremath{\Leftarrow}}
+\newcommand{\rarr}{\ensuremath{\rightarrow}}
+\newcommand{\Rarr}{\ensuremath{\Rightarrow}}
+\newcommand{\lrarr}{\ensuremath{\leftrightarrow}}
+\newcommand{\Lrarr}{\ensuremath{\Leftrightarrow}}
+
+\newcommand{\urarr}{\ensuremath{\nearrow}}
+\newcommand{\drarr}{\ensuremath{\searrow}}
+\newcommand{\ularr}{\ensuremath{\nwarrow}}
+\newcommand{\dlarr}{\ensuremath{\swarrow}}
+\newcommand{\goesto}[1]{\ensuremath{\xrightarrow{#1} }}
+
+%--------------------
+% Probability Stuff
+%--------------------
+\newcommand{\EE}[1][]{\mathrm{E_{#1} }} %Expected Value
+\DeclareMathOperator{\var}{Var} %variance
+\DeclareMathOperator{\cov}{Cov} %covariance
+%\newcommand{\prb}[1]{\mathrm{Pr}\sbr{#1} }
+\DeclareMathOperator{\HH}{H}
+\DeclareMathOperator{\II}{I}
+\DeclareMathOperator{\RelEntropy}{D}
+\newcommand{\DD}[2]{\ensuremath{\RelEntropy \left( #1\vphantom{#2}\right\Vert\left. \vphantom{#1}#2 \right) }}
+\newcommand{\HR}[1]{\HH_{#1}} %Renyi Entropy
+
+\newcommand{\unif}[1]{\ensuremath{ \calU \left[ #1 \right] }}
+\newcommand{\expDist}[1]{\ensuremath{ \mathsf{EXP}\left( #1 \right) }}
+\newcommand{\gaussian}[2]{\calN\left(#1,#2\right)}
+
+\newcommand{\prbFkt}[3]{\ensuremath{ #3_{#1}
+		\ifthenelse{\isempty{#2}}{}
+		{\left( #2\right)} 
+}}
+\newcommand{\prbFktCond}[5]{\ensuremath{ 
+		#5_{
+			\left. \vphantom{#2}#1\right|#2
+		}
+		\ifthenelse{\isempty{#3} \or \isempty{#4}}
+		{} %at least one argument empty, do nothing
+		{
+			\left( \vphantom{#4}#3\right|\left. \vphantom{#3}#4\right) 
+		}
+}}
+\newcommand{\pdf}[2]{\prbFkt{#1}{#2}{f}}
+\newcommand{\pdfCond}[4]{\prbFktCond{#1}{#2}{#3}{#4}{f}}
+\newcommand{\cdf}[2]{\prbFkt{#1}{#2}{F}}
+\newcommand{\cdfCond}[4]{\prbFktCond{#1}{#2}{#3}{#4}{F}}
+\newcommand{\pmf}[2]{\prbFkt{#1}{#2}{p}}
+\newcommand{\pmfCond}[4]{\prbFktCond{#1}{#2}{#3}{#4}{p}}
+\newcommand{\prb}[1]
+{\ensuremath{
+		\mathrm{Pr}{\left[ #1\right]} 
+}}
+\newcommand{\prbCond}[2]
+{
+	\mathrm{Pr}\left[ \vphantom{#2}#1\right|\left. \vphantom{#1}#2\right]
+}
+
+
+\newcommand{ \calA}{\ensuremath{\mathcal A}}
+\newcommand{ \calB}{\ensuremath{\mathcal B}}
+\newcommand{ \calC}{\ensuremath{\mathcal C}}
+\newcommand{ \calD}{\ensuremath{\mathcal D}}
+\newcommand{ \calE}{\ensuremath{\mathcal E}}
+\newcommand{ \calF}{\ensuremath{\mathcal F}}
+\newcommand{ \calG}{\ensuremath{\mathcal G}}
+\newcommand{ \calH}{\ensuremath{\mathcal H}}
+\newcommand{ \calI}{\ensuremath{\mathcal I}}
+\newcommand{ \calJ}{\ensuremath{\mathcal J}}
+\newcommand{ \calK}{\ensuremath{\mathcal K}}
+\newcommand{ \calL}{\ensuremath{\mathcal L}}
+\newcommand{ \calM}{\ensuremath{\mathcal M}}
+\newcommand{ \calN}{\ensuremath{\mathcal N}}
+\newcommand{ \calO}{\ensuremath{\mathcal O}}
+\newcommand{ \calP}{\ensuremath{\mathcal P}}
+\newcommand{ \calQ}{\ensuremath{\mathcal Q}}
+\newcommand{ \calR}{\ensuremath{\mathcal R}}
+\newcommand{ \calS}{\ensuremath{\mathcal S}}
+\newcommand{ \calT}{\ensuremath{\mathcal T}}
+\newcommand{ \calU}{\ensuremath{\mathcal U}}
+\newcommand{ \calV}{\ensuremath{\mathcal V}}
+\newcommand{ \calW}{\ensuremath{\mathcal W}}
+\newcommand{ \calX}{\ensuremath{\mathcal X}}
+\newcommand{ \calY}{\ensuremath{\mathcal Y}}
+\newcommand{ \calZ}{\ensuremath{\mathcal Z}}
+
+\newcommand{ \bbA}{\ensuremath{\mathbb A}}
+\newcommand{ \bbB}{\ensuremath{\mathbb B}}
+\newcommand{ \bbC}{\ensuremath{\mathbb C}}
+\newcommand{ \bbD}{\ensuremath{\mathbb D}}
+\newcommand{ \bbE}{\ensuremath{\mathbb E}}
+\newcommand{ \bbF}{\ensuremath{\mathbb F}}
+\newcommand{ \bbG}{\ensuremath{\mathbb G}}
+\newcommand{ \bbH}{\ensuremath{\mathbb H}}
+\newcommand{ \bbI}{\ensuremath{\mathbb I}}
+\newcommand{ \bbJ}{\ensuremath{\mathbb J}}
+\newcommand{ \bbK}{\ensuremath{\mathbb K}}
+\newcommand{ \bbL}{\ensuremath{\mathbb L}}
+\newcommand{ \bbM}{\ensuremath{\mathbb M}}
+\newcommand{ \bbN}{\ensuremath{\mathbb N}}
+\newcommand{ \bbO}{\ensuremath{\mathbb O}}
+\newcommand{ \bbP}{\ensuremath{\mathbb P}}
+\newcommand{ \bbQ}{\ensuremath{\mathbb Q}}
+\newcommand{ \bbR}{\ensuremath{\mathbb R}}
+\newcommand{ \bbS}{\ensuremath{\mathbb S}}
+\newcommand{ \bbT}{\ensuremath{\mathbb T}}
+\newcommand{ \bbU}{\ensuremath{\mathbb U}}
+\newcommand{ \bbV}{\ensuremath{\mathbb V}}
+\newcommand{ \bbW}{\ensuremath{\mathbb W}}
+\newcommand{ \bbX}{\ensuremath{\mathbb X}}
+\newcommand{ \bbY}{\ensuremath{\mathbb Y}}
+\newcommand{ \bbZ}{\ensuremath{\mathbb Z}}
+
+
+\newcommand{ \bfA}{\ensuremath{\mathbf A}}
+\newcommand{ \bfB}{\ensuremath{\mathbf B}}
+\newcommand{ \bfC}{\ensuremath{\mathbf C}}
+\newcommand{ \bfD}{\ensuremath{\mathbf D}}
+\newcommand{ \bfE}{\ensuremath{\mathbf E}}
+\newcommand{ \bfF}{\ensuremath{\mathbf F}}
+\newcommand{ \bfG}{\ensuremath{\mathbf G}}
+\newcommand{ \bfH}{\ensuremath{\mathbf H}}
+\newcommand{ \bfI}{\ensuremath{\mathbf I}}
+\newcommand{ \bfJ}{\ensuremath{\mathbf J}}
+\newcommand{ \bfK}{\ensuremath{\mathbf K}}
+\newcommand{ \bfL}{\ensuremath{\mathbf L}}
+\newcommand{ \bfM}{\ensuremath{\mathbf M}}
+\newcommand{ \bfN}{\ensuremath{\mathbf N}}
+\newcommand{ \bfO}{\ensuremath{\mathbf O}}
+\newcommand{ \bfP}{\ensuremath{\mathbf P}}
+\newcommand{ \bfQ}{\ensuremath{\mathbf Q}}
+\newcommand{ \bfR}{\ensuremath{\mathbf R}}
+\newcommand{ \bfS}{\ensuremath{\mathbf S}}
+\newcommand{ \bfT}{\ensuremath{\mathbf T}}
+\newcommand{ \bfU}{\ensuremath{\mathbf U}}
+\newcommand{ \bfV}{\ensuremath{\mathbf V}}
+\newcommand{ \bfW}{\ensuremath{\mathbf W}}
+\newcommand{ \bfX}{\ensuremath{\mathbf X}}
+\newcommand{ \bfY}{\ensuremath{\mathbf Y}}
+\newcommand{ \bfZ}{\ensuremath{\mathbf Z}}
+
+\newcommand{ \setA}{\ensuremath{\mathcal A}}
+\newcommand{ \setB}{\ensuremath{\mathcal B}}
+\newcommand{ \setC}{\ensuremath{\mathcal C}}
+\newcommand{ \setD}{\ensuremath{\mathcal D}}
+\newcommand{ \setE}{\ensuremath{\mathcal E}}
+\newcommand{ \setF}{\ensuremath{\mathcal F}}
+\newcommand{ \setG}{\ensuremath{\mathcal G}}
+\newcommand{ \setH}{\ensuremath{\mathcal H}}
+\newcommand{ \setI}{\ensuremath{\mathcal I}}
+\newcommand{ \setJ}{\ensuremath{\mathcal J}}
+\newcommand{ \setK}{\ensuremath{\mathcal K}}
+\newcommand{ \setL}{\ensuremath{\mathcal L}}
+\newcommand{ \setM}{\ensuremath{\mathcal M}}
+\newcommand{ \setN}{\ensuremath{\mathcal N}}
+\newcommand{ \setO}{\ensuremath{\mathcal O}}
+\newcommand{ \setP}{\ensuremath{\mathcal P}}
+\newcommand{ \setQ}{\ensuremath{\mathcal Q}}
+\newcommand{ \setR}{\ensuremath{\mathcal R}}
+\newcommand{ \setS}{\ensuremath{\mathcal S}}
+\newcommand{ \setT}{\ensuremath{\mathcal T}}
+\newcommand{ \setU}{\ensuremath{\mathcal U}}
+\newcommand{ \setV}{\ensuremath{\mathcal V}}
+\newcommand{ \setW}{\ensuremath{\mathcal W}}
+\newcommand{ \setX}{\ensuremath{\mathcal X}}
+\newcommand{ \setY}{\ensuremath{\mathcal Y}}
+\newcommand{ \setZ}{\ensuremath{\mathcal Z}}
+
