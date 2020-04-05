@@ -45,5 +45,5 @@ namespace ABM
 	// Input: population, municipality vector indexed by BfsIds and int for date
 	// Side effect: creates a folder with date as name and containing all heat maps,
 	// and possibly a jason with further data to be desplayed on the website.
-    void vizualize(Population& population,  int date);
+    void vizualize(Population& population,  int date, std::map<index_t,index_t> map);
 }

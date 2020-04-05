@@ -119,7 +119,7 @@ int main(int argc, char** argv)
     {
         std::cout<< m.Coordinates.first<<" "<<m.Coordinates.second<<std::endl;
     }
-    /*
+    
     Parameters parameters;
 
     std::cout << "starting distance initialisation..." << std::endl;
@@ -170,7 +170,7 @@ int main(int argc, char** argv)
     {
         PerformTimeStep(p, parameters, bf);
         // export population for output? <-------------------------
-        vizualize(p, t);
+        vizualize(p, t,bfsIdToIdx_map);
     }
-    */
+    
 };
