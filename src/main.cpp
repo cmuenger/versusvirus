@@ -90,15 +90,15 @@ int main(int argc, char** argv)
             {
                 work_class[0]++;
             }
-            else if(p.Workplaces[a.Workplace].Size == WorkCat::Small)
+            else if(p.Workplaces[a.Workplace].Size == WorkCat::Medium)
             {
                 work_class[1]++;
             }
-            else if(p.Workplaces[a.Workplace].Size == WorkCat::Small)
+            else if(p.Workplaces[a.Workplace].Size == WorkCat::Large)
             {
                 work_class[2]++;
             }
-            else if(p.Workplaces[a.Workplace].Size == WorkCat::Small)
+            else if(p.Workplaces[a.Workplace].Size == WorkCat::Global)
             {
                 work_class[3]++;
             }
@@ -106,6 +106,7 @@ int main(int argc, char** argv)
         }
     }
 
+    std::cout<<work_class[0]<<" "<<work_class[1]<<" "<<work_class[2]<<" "<<work_class[3]<<std::endl;
     Parameters parameters;
 
     std::cout << "starting distance initialisation..." << std::endl;
