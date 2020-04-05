@@ -26,10 +26,10 @@ namespace ABM
 	// Input int array[hight][width][4] with data for each geographical location (hight, width)
 	// that gives the Susceptible, Exposed, Infected and Recovered on the 4 channels
 	// Side effect: genereate heat map png from the given map.
-	void create_heatmap(int* infection_map, int date, std::string name);
+	void create_heatmap(int*** infection_map, int date, std::string name);
 
 	// Input: population, municipality vector indexed by BfsIds and int for date
 	// Side effect: creates a folder with date as name and containing all heat maps,
 	// and possibly a jason with further data to be desplayed on the website.
-    void vizualize(Population& population, std::vector<Municipality>& municipalities,  int date);
+    void vizualize(Population& population,  int date);
 }
