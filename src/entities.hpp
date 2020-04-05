@@ -23,6 +23,7 @@ namespace ABM
     {
         index_t Household;
         index_t Workplace;
+        index_t Municipality;
         AgeCat Age;
         HealthCat Health;
         bool HasSymptoms;
@@ -49,6 +50,7 @@ namespace ABM
 
     struct Municipality
     {
+        index_t Id;
         index_t BfsId;
         std::string Name;
         std::pair<double,double> Coordinates;
@@ -114,6 +116,7 @@ namespace ABM
         std::vector<std::vector<index_t>> AgentsOfHousehold;
         std::vector<std::vector<index_t>> AgentsOfWorkplace;
         std::vector<std::vector<index_t>> WorkplacesOfMunicipality;
+         std::vector<std::vector<index_t>> AgentsOfMunicipality;
 
 
 
@@ -125,8 +128,9 @@ namespace ABM
 
         void assignAgentsToWorkplaces( /* data */);
 
-        void createHouseholds(std::vector<HelpPopulation> pop, std::vector<HelpHousehold> house);        void createWorkplaces();
-        void createMunicipalities(std::vector<HelpPopulation> pop, std::vector<Commuter> com);
+        void createHouseholds(std::vector<HelpPopulation> pop, std::vector<HelpHousehold> house);        
+        void createWorkplaces();
+        void createMunicipalities(std::vector<HelpPopulation> pop, std::vector<Commuter> com, std::map<index_t, index_t> map);
 
         void createLookUpTableForAgents(std::map<index_t,index_t> map);
         void createLookUpTableForWorkplaces();
@@ -136,7 +140,7 @@ namespace ABM
 
         Household GetHouseholdOfAgent(index_t agentIdx) const;
         Workplace GetWorkplaceOfAgent(index_t agentIdx) const;
-
+        std::vector<index_t> GetWorkforceOfMunicipality(index_t c_idx) const;
         index_t GetRandomAdultOfHousehold(index_t hIdx) const;
 
         std::vector<index_t> GetWorkplacesOfMunicipality(index_t cIdx) const;

@@ -1,22 +1,22 @@
 all: simulation
 
 util.o: util.hpp util.cpp
-	g++ --std=c++17 -O3 util.cpp -c
+	g++ --std=c++17 -O0 -g util.cpp -c
 
 entities.o: entities.hpp entities.cpp
-	g++ --std=c++17 -O3 entities.cpp -c
+	g++ --std=c++17 -O0 -g entities.cpp -c
 
 parameters.o: parameters.hpp parameters.cpp
-	g++ --std=c++17 -O3 parameters.cpp -c
+	g++ --std=c++17 -O0 -g parameters.cpp -c
 
 simulation.o: simulation.hpp simulation.cpp
-	g++ --std=c++17 -O3 simulation.cpp -c
+	g++ --std=c++17 -O0 -g simulation.cpp -c
 
 main.o: main.cpp
-	g++ --std=c++17 -O3 main.cpp -c
+	g++ --std=c++17 -O0 -g  main.cpp -c
 
 simulation: util.o entities.o parameters.o simulation.o main.o
-	g++ --std=c++17 -O3 util.o entities.o parameters.o simulation.o main.o -o simulation
+	g++ --std=c++17 -O0 -g util.o entities.o parameters.o simulation.o main.o -o simulation
 
 clean:
 	rm -f *.o
