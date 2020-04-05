@@ -1,5 +1,7 @@
 #include "entities.hpp"
 
+#include <set>
+
 namespace ABM
 {
     namespace Rng
@@ -76,6 +78,9 @@ namespace ABM
             m.MaxWorkplaces = p.NWorkplaces;
             m.NWorkplaces = 0;
             m.NHouseholds = 0;
+
+            m.commutes_map = std::vector<index_t>(0);
+            m.commutes_map = std::vector<index_t>(0);
             
             
             int countCommutes=0;
@@ -401,14 +406,31 @@ namespace ABM
         //Loop over Municpaltiy. 
         for(const auto& m : Municipalities)
         {   
+          
             if(m.commutes.size() == 0) continue;
             multimodal_distribution multimodal(m.commutes);
             std::vector<index_t> workforce = GetWorkforceOfMunicipality(m.Id);
-            std::cout<<m.Id<<std::endl;
-            while(!workforce.empty())
-            {   
-                index_t a_idx = workforce.back();
-                workforce.pop_back();
+
+            std::set<index_t> workforce_set;
+            for(int i=0; i<workforce.size(); i++)
+            {
+                workforce_set.insert(i);
+                
+            }
+            
+            int c =0;
+            while(c< m.Ncommutes && !workforce_set.empty())
+            {
+                std::set<index_t>::iterator it;
+                index_t w_idx = uniform.sample_int(0, workforce.size());
+                while(workforce_set.find(w_idx) == workforce_set.end())
+                {
+                    w_idx = uniform.sample_int(0, workforce.size());
+                }
+                it = workforce_set.find(w_idx);
+      
+            
+                c++;
             
         
                 //Pick a commute. Multimodal distribution of commutes by size
@@ -423,8 +445,8 @@ namespace ABM
                 
                 //std::cout<<W<<" "<<w_indices.size()<<std::endl;
                 //Pick a workplace rejection sampling over distibution (upper bound for large companies 500); check if the still have open positions else reject
-                
-                int reject =0;
+                    index_t b = workforce[*it];
+                     workforce_set.erase(it);
                 while(true)
                 {
                     index_t w_idx = w_indices[uniform.sample_int(0, W)];
@@ -434,11 +456,10 @@ namespace ABM
                     //Accept
                     if(p <   (Workplaces[w_idx].MinWorker/1000.0) )//1000 Upper bound for large companies
                     {
-                    Agents[a_idx].Workplace = w_idx;
-                    Workplaces[w_idx].NWorker++;
-                    break;
+                        Agents[b].Workplace = w_idx;
+                        Workplaces[w_idx].NWorker++;
+                        break;
                     }
-                    reject++;
                 }
                
             
@@ -476,7 +497,12 @@ namespace ABM
     }
 
     std::vector<index_t> Population::GetWorkplacesOfMunicipality(index_t c_idx) const
-    {
+    {   
+        if(c_idx >= WorkplacesOfMunicipality.size())
+        {
+            std::cerr<<c_idx<<std::endl;
+            exit(-1);
+        }
         return WorkplacesOfMunicipality[c_idx];
     }
 
