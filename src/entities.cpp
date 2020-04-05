@@ -423,6 +423,8 @@ namespace ABM
                 
                 //std::cout<<W<<" "<<w_indices.size()<<std::endl;
                 //Pick a workplace rejection sampling over distibution (upper bound for large companies 500); check if the still have open positions else reject
+                
+                int reject =0;
                 while(true)
                 {
                     index_t w_idx = w_indices[uniform.sample_int(0, W)];
@@ -436,7 +438,10 @@ namespace ABM
                     Workplaces[w_idx].NWorker++;
                     break;
                     }
+                    reject++;
                 }
+               
+            
 
             }
         }

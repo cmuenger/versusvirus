@@ -94,6 +94,32 @@ int main(int argc, char** argv)
 
     p.assignAgentsToWorkplaces();
 
+
+    std::vector<index_t> work_class(4,0);
+    for(const auto& a : p.Agents)
+    {
+        if(a.Workplace != ~0)
+        {
+            if(p.Workplaces[a.Workplace].Size == WorkCat::Small)
+            {
+                work_class[0]++;
+            }
+            else if(p.Workplaces[a.Workplace].Size == WorkCat::Small)
+            {
+                work_class[1]++;
+            }
+            else if(p.Workplaces[a.Workplace].Size == WorkCat::Small)
+            {
+                work_class[2]++;
+            }
+            else if(p.Workplaces[a.Workplace].Size == WorkCat::Small)
+            {
+                work_class[3]++;
+            }
+
+        }
+    }
+
     // END TEST
 
     //---------------------------
