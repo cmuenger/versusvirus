@@ -1,0 +1,7 @@
+.vscode/**
+**/.~lock.*
+
+**.o
+simulation
+debug
+simulation_single
