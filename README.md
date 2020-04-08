@@ -13,10 +13,13 @@ Project started for the [VersusVirus Hackathon](https://www.versusvirus.ch/). Th
 ### Requirments
 
 * C++ Compiler
+* CMake
 * Make
 
 ### Usage
 
-	cd src
+	mkdir build
+	cd build
+	cmake ..
    	make
-   	./simulation
+   	./src/main
