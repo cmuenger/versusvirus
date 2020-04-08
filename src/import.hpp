@@ -53,7 +53,7 @@ std::vector<std::vector<std::string> > import_csv(const std::string filename, bo
 std::vector<HelpCoordinates> importMunicipalies()
 {
     std::vector<HelpCoordinates> municipality;
-    std::vector<std::vector<std::string> > dataList = import_csv("data/Municipalies.csv", false);
+    std::vector<std::vector<std::string> > dataList = import_csv("../data/Municipalies.csv", false);
 
     for(std::vector<std::string> vec : dataList)
 	{
@@ -80,7 +80,7 @@ std::tuple<std::vector<HelpPopulation>,std::vector<index_t>,std::map<index_t,ind
     std::vector<index_t> id;
     std::map<index_t,index_t> map;
     index_t i =0;
-    std::vector<std::vector<std::string> > dataList = import_csv("data/PopulationData2014.csv", false);
+    std::vector<std::vector<std::string> > dataList = import_csv("../data/PopulationData2014.csv", false);
 
     for(std::vector<std::string> vec : dataList)
 	{
@@ -119,7 +119,7 @@ std::tuple<std::vector<HelpPopulation>,std::vector<index_t>,std::map<index_t,ind
 std::vector<Commuter> importCommuter()
 {
     std::vector<Commuter> Commuters;
-    std::vector<std::vector<std::string> > dataList = import_csv("data/CommutePairs.csv", false);
+    std::vector<std::vector<std::string> > dataList = import_csv("../data/CommutePairs.csv", false);
 
     for(std::vector<std::string> vec : dataList)
 	{
@@ -147,7 +147,7 @@ std::vector<Commuter> importCommuter()
 std::vector<HelpHousehold> importHouseholds()
 {
     std::vector<HelpHousehold> Households;
-    std::vector<std::vector<std::string> > dataList = import_csv("data/Households2014.csv", false);
+    std::vector<std::vector<std::string> > dataList = import_csv("../data/Households2014.csv", false);
 
     for(std::vector<std::string> vec : dataList)
 	{
