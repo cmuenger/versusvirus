@@ -40,6 +40,17 @@ namespace ABM
         std::map<index_t, index_t>& map, const Parameters& parameters)
     {
         std::vector<std::tuple<size_t, size_t, double>> triples = std::vector<std::tuple<size_t, size_t, double>>();
+        for(index_t i = 0; i < municipalities.size(); i++)
+        {
+            for(index_t j = i; j < municipalities.size(); j++)
+            {
+                const Municipality& munA = municipalities[i];
+                const Municipality& munB = municipalities[j];
+
+                double dist = Dist(munA.Coordinates, munB.Coordinates, parameters.a_dist, parameters.b_dist);
+                
+            }
+        }
         // for(size_t aIdx = 0; aIdx < Agents.size(); aIdx++)
         // {
         //     std::cout << "At agent " << aIdx << "/" << Agents.size() << std::endl;
@@ -586,5 +597,23 @@ namespace ABM
         else
             return ~0;
         
+    }
+
+    std::vector<index_t> Population::GetAgentsOfMunicipalities(index_t idxA, index_t idxB)
+    {
+        std::vector<index_t> HouseHoldsOfMunA;
+        std::vector<index_t> HouseHoldsOfMunB;
+        for(index_t i = 0; i < Households.size(); i++)
+        {
+            if(Households[i].Municipality == idxA)
+            {
+                HouseHoldsOfMunA.push_back(i);
+            }
+            if(Households[i].Municipality == idxB)
+            {
+                HouseHoldsOfMunB.push_back(i);
+            }
+        }
+
     }
 }

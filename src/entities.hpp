@@ -156,5 +156,7 @@ namespace ABM
         index_t GetRandomAdultOfHousehold(index_t hIdx) const;
 
         std::vector<index_t> GetWorkplacesOfMunicipality(index_t cIdx) const;
+
+        std::vector<index_t> GetAgentsOfMunicipalities(index_t idxA, index_t idxB);
     };
 }
