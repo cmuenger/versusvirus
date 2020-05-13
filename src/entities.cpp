@@ -1,6 +1,7 @@
 #include "entities.hpp"
 
-#include <set>
+#include <unordered_set>
+#include <unordered_map>
 
 namespace ABM
 {
@@ -40,6 +41,23 @@ namespace ABM
         std::map<index_t, index_t>& map, const Parameters& parameters)
     {
         std::vector<std::tuple<size_t, size_t, double>> triples = std::vector<std::tuple<size_t, size_t, double>>();
+        std::unordered_map<std::pair<index_t, index_t>, double> _map;
+        std::vector<std::unordered_set<index_t>*> agentsOfMunicipality = std::vector<std::set<index_t>>(Municipalities.size(), new std::unordered_set<index_t>());
+        index_t agtIdx = 0;
+        for(index_t agtIdx = 0; agtIdx < Agents.size(); agtIdx++)
+        {
+            const Agent agent = Agents[agtIdx];
+            const auto hh = Households[agent.Household];
+            agentsOfMunicipality[hh.Municipality]->insert(agtIdx);
+
+            if(agent.Workplace != ~0)
+            {
+                const auto wp = Workplaces[agent.Workplace];
+                agentsOfMunicipality[wp.Municipality]->insert(agtIdx);
+            }
+            agtIdx++;
+        }
+        // iterate over all possible distances
         for(index_t i = 0; i < municipalities.size(); i++)
         {
             for(index_t j = i; j < municipalities.size(); j++)
@@ -48,34 +66,40 @@ namespace ABM
                 const Municipality& munB = municipalities[j];
 
                 double dist = Dist(munA.Coordinates, munB.Coordinates, parameters.a_dist, parameters.b_dist);
-                
+                if(dist < parameters.cutoff)
+                {
+                    // iterate over all agent-pairs with this distance
+                    for(index_t agtIdxA : (*agentsOfMunicipality[i]))
+                    {
+                        for(index_t agtIdxB : (*agentsOfMunicipality[j]))
+                        {
+                            // add distance if agent pair does not yet exist or if smaller than existing distance
+                            std::pair<index_t, index_t> key = agtIdxA < agtIdxB ? std::make_pair(agtIdxA, agtIdxB) : std::make_pair(agtIdxB, agtIdxA);
+                            if(_map.find(key) != _map.end())
+                            {
+                                if(dist < _map[key])
+                                {
+                                    _map[key] = dist;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
-        // for(size_t aIdx = 0; aIdx < Agents.size(); aIdx++)
-        // {
-        //     std::cout << "At agent " << aIdx << "/" << Agents.size() << std::endl;
-        //     const Municipality& ahh = municipalities[map[Households[Agents[aIdx].Household].Municipality]];
-        //     const Municipality& awp = municipalities[map[Workplaces[Agents[aIdx].Workplace].Municipality]];
-            
-        //     for(size_t bIdx = 0; bIdx < Agents.size(); bIdx++)
-        //     {     
-        //         const Municipality& bhh = municipalities[map[Households[Agents[bIdx].Household].Municipality]];
-        //         const Municipality& bwp = municipalities[map[Workplaces[Agents[bIdx].Workplace].Municipality]];
 
-        //         double dist1 = Dist(ahh.Coordinates, bhh.Coordinates, parameters.a_dist, parameters.b_dist);
-        //         double dist2 = Dist(ahh.Coordinates, bwp.Coordinates, parameters.a_dist, parameters.b_dist);
-        //         double dist3 = Dist(awp.Coordinates, bhh.Coordinates, parameters.a_dist, parameters.b_dist);
-        //         double dist4 = Dist(awp.Coordinates, bwp.Coordinates, parameters.a_dist, parameters.b_dist);
-                
-        //         double dist = std::min({dist1, dist2, dist3, dist4});
-        //         if (dist <= parameters.cutoff)
-        //         {
-        //             triples.push_back( std::make_tuple(aIdx, bIdx, dist));
-        //         }
+        // free memory
+        for(auto s : agentsOfMunicipality)
+        {
+            delete s;
+        }
+        agentsOfMunicipality.clear();
 
-        //     }
-        // }
-
+        // convert to sparse matrix
+        for(auto iter = _map.begin(); iter != _map.end(); iter++)
+        {
+            triples.push_back(std::make_tuple( iter->first.first, iter->first.second, iter->second));
+        }
         DistanceWeights = SparseMatrix(triples, Agents.size());
     }
 
